@@ -56,7 +56,7 @@ def read_temp():
     #convert the result to an int
     temperature = int.from_bytes(read_result.buf[0]+read_result.buf[1],'big')
     print("displayin temperature", conv_temperature(temperature))
-    pass
+    return conv_temperature(temperature)
 
 elapse_time = 0
 curr_time = time.time()
