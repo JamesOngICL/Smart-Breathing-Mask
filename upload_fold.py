@@ -9,7 +9,7 @@ def conv_temperature(value):
     """
     #temperature conv func
     temp = (175.72*value)/65536
-    temp -= 6
+    temp -= 46.85
 
     return temp
 
@@ -20,7 +20,7 @@ def make_array(temperature,curr_arr=[]):
     dict_values = {"temperatures":curr_arr}
     print("in make_array: ",dict_values)
     
-    with open("temperature.json", "a") as out_file:
+    with open("temperature.json", "w") as out_file:
         json.dump(dict_values,out_file)
     out_file.close()
     time.sleep(0.5)
