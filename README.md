@@ -13,7 +13,7 @@
 The two important files are views.py and urls.py under authentication folder.<br><br>The only real backend files are under authentication/views.py where all the functions are, the file authentication/urls.py specifies which function should be associated with a specified url. The file extfunctions.py on the outside is imported in views.py to write functions more cleanly.
 
 <h2>Understand the frontend</h2>
-The important files for frontend is under templates/authentication. These files are acessed in views.py. We can pass parameters into these html files in views.py by doing something like this:<br>return render(request, "authentication/search.html",{'aboutme':extfunctions.getabout(request.user.username)})<br>Here we are passing a json data into the html file. We can extract this data by simply writing {{aboutme}} in the html code.
+The important files for frontend is under templates/authentication. These files are acessed in views.py. We can pass parameters into these html files in views.py by doing something like this:<br><br>return render(request, "authentication/search.html",{'aboutme':extfunctions.getabout(request.user.username)})<br><br>Here this function will render search.html file for the user. The dictionary is passed and can be accessed in the html file. We can extract this data by simply writing {{aboutme}} in the html code.
 
 <h2>Http requests</h2>
 The main http request is under home() function in views.py. Try sending a post data using the python file and the data should be recieved by this function. You can try printing request.POST() and see that your JSON data has been received here.
