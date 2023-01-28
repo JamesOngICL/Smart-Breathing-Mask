@@ -1,6 +1,6 @@
 # embedded_iot2
 
-<h2>Running the Server<h2>
+<h2>Running the Server</h2>
 To run server locally:
   python3 manage.py runserver
 To run server on specified port:
