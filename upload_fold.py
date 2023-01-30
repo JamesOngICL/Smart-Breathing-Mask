@@ -13,6 +13,7 @@ def conv_temperature(value):
 
     return temp
 
+
 def make_array(temperature,curr_arr=[]):
     """This expands the created an array and writes to a file"""
     curr_arr.append(float(temperature))
