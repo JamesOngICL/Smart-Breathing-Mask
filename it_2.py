@@ -8,6 +8,17 @@ import threading
 import json
 import random
 
+import sys
+import requests
+import http.client
+import time
+import math
+import random
+
+URL = 'http://146.169.248.64:8080'
+
+
+
 #some MPU6050 Registers and their Address
 
 class temp_hum_sensor():
@@ -278,10 +289,39 @@ def simulate_server(thread_name):
             #posts this value to a JSON
             # if KeyboardInterrupt:
             #     break
+            track = 0
+
+            client = requests.session()
+            # Retrieve the CSRF token first
+            client.get(URL)  # sets cookie
+            if 'csrftoken' in client.cookies:
+                # Django 1.6 and up
+                csrftoken = client.cookies['csrftoken']
+            else:
+                # older versions
+                csrftoken = client.cookies['csrf']
+
+            y = 40*math.sin((track/10)*32*3.14)+50
+            put_key = ""
+            for key in get_val:
+                tmp = get_val[key]
+                if key=='temperature':
+                    put_key = 'Sensor:temperaturereading'
+                else:
+                    put_key = "Sensor:accelerometerreading"
+
+            login_data = {put_key:tmp,'address':'MS3120001','csrfmiddlewaretoken':csrftoken}
+
+            r = client.post(URL, data=login_data, headers=dict(Referer=URL))
+            time.sleep(0.001)
+            track = track + 0.001
+            print(len(r.text))
+
             with open("my_test.json","a") as outp:
                 json.dump(get_val,outp)
                 json.dump("\\n\\",outp)
             outp.close()
+
     return
 
 elapse_time = 0
