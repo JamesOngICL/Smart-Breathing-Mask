@@ -64,6 +64,13 @@ Project guide is available here: https://github.com/edstott/ES-CW1/blob/main/REA
 * Video demonstrating the functioning of the product
 
 
+## Tasks
+
+* Multithreading - in progress - James
+* Setting up air quality sensor - Milan
+* Setting up marketing website - Matthew? otherwise Milan
+* 
+
 ## Aims
 
 
