@@ -16,5 +16,6 @@ urlpatterns = [
     path('favorites',views.favorites, name="favorites"),
     path('search', views.search, name="search"),
     path('chart',views.chart, name="chart"),
-    path('getdata',views.fetch_values, name="getdata")
+    path('getdata',views.fetch_values, name="getdata"),
+    path('livechart/<id>',views.livechart, name="livechart")
 ]
