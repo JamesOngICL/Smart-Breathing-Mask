@@ -15,20 +15,35 @@ from django.http import JsonResponse
 def chart(request):
       return render(request,"authentication/chart.html")
 
+def livechart(request,id):
+      devices = extfunctions.getdevices(request.user.username)
+      found = 0
+      if len(devices)>0:
+            for i in range(len(devices)):
+                  if id==devices[i][0]:
+                        found = 1
+                        break
+      
+      if found == 1: 
+            return render(request,"authentication/chart.html",{"id":id})
+      else:
+            return yourdata(request)
+
 def fetch_values(request):
-      print("fetched")
-      file = open("test.txt","r")
-      val = float(file.read())
-      file.close()
-      data = {'result':val}
+      sensors = extfunctions.getsensors(extfunctions.getmodel(request.GET["id"]))
+      data = {}
+      for i in sensors:
+            data[i] = extfunctions.getreading(request.GET["id"],i)
       return JsonResponse(data)
 
 def home(request):
       if request.method == "POST":
             print(request.POST)
-            file = open("test.txt","w")
-            file.write(request.POST["temperature"])
-            file.close()
+            for i in request.POST:
+                  n = i.split(":")
+                  if len(n)>1:
+                        print("param:",request.POST["address"],request.POST[i],n[1])
+                        extfunctions.updatereading(request.POST["address"],n[1],request.POST[i])
       return render(request, "authentication/index.html")
 
 def signup(request):
@@ -62,7 +77,7 @@ def signin(request):
             if user is not None:
                   login(request, user)
                   fname = user.first_name
-                  return render(request, "authentication/index.html", {'firstname':fname})
+                  return yourdata(request)
             
             else:
                   messages.error(request, "Bad Credentials")
@@ -77,8 +92,7 @@ def profile(request):
       devices = extfunctions.getdevices(request.user.username)
       tempdevices = ""
       for i in range(len(devices)):
-            tempdevices = tempdevices + devices[i][1]+"("+devices[i][0]+")"+","
-      print(tempdevices)
+            tempdevices = tempdevices + devices[i][1] + ","
       return render(request, "authentication/profile.html",{'aboutme':extfunctions.getabout(request.user.username),'devices':tempdevices})
 
 def profileedit(request):
@@ -86,7 +100,7 @@ def profileedit(request):
       tempdevices = ""
       devicelist = []
       for i in range(len(devices)):
-            tempdevices = tempdevices + devices[i][1]+"("+devices[i][0]+")"+","
+            tempdevices = tempdevices + devices[i][1] + ","
             devicelist.append(devices[i][0])
       if request.method == "POST":
             print(request.POST)
@@ -100,7 +114,7 @@ def profileedit(request):
       devices = extfunctions.getdevices(request.user.username)
       tempdevices = ""
       for i in range(len(devices)):
-            tempdevices = tempdevices + devices[i][1]+"("+devices[i][0]+")"+","
+            tempdevices = tempdevices + devices[i][1]+","
       return render(request, "authentication/profileedit.html",{'aboutme':extfunctions.getabout(request.user.username),'devices':tempdevices})
 
 def signout(request):
@@ -109,7 +123,12 @@ def signout(request):
       return home(request)
 
 def yourdata(request):
-      return render(request, "authentication/yourdata.html",{'aboutme':extfunctions.getabout(request.user.username)})
+      devices = extfunctions.getdevices(request.user.username)
+      tempdevices = ""
+      for i in range(len(devices)):
+            tempdevices = tempdevices + devices[i][1]+" ("+devices[i][0]+")"+","
+      about = extfunctions.getabout(request.user.username)
+      return render(request, "authentication/yourdata.html",{'aboutme':extfunctions.getabout(request.user.username),'devices':tempdevices,'aiquery':extfunctions.aiquery(about)})
 
 def favorites(request):
       return render(request, "authentication/favorites.html",{'aboutme':extfunctions.getabout(request.user.username)})

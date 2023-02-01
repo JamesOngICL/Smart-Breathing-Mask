@@ -1,5 +1,6 @@
 <html>
 <head>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <script type="text/javascript">
 	//https://www.youtube.com/watch?v=H5LneQjrnF4
  	window.onload = function() {
@@ -20,12 +21,6 @@
             time: {
               unit : 'second'
             }
-          }],
-            yAxes: [{
-                ticks: {
-                    min:20,
-                    max:30
-                }
             }]
         },
         legend: {display: false},
@@ -50,11 +45,25 @@
             text: "Temperature",
             fontSize: 18
           },
+          scales: {
+          	xAxes: [{
+            type: 'time',
+            time: {
+              unit : 'second'
+            }
+            }],
+            yAxes: [{
+              ticks:{
+                max: 100,
+                min: 0
+              }
+            }]
+          },
           elements: {
                     point:{
                         radius: 0
                     }
-                }
+          }
         })
     });
       var yAccelChartInstance = new Chart(yAccelChart, {
@@ -73,6 +82,11 @@
               display: true,
               text: "Acceleration - Y",
               fontSize: 18
+            },
+            elements: {
+              point:{
+                radius: 0
+              }
             }
           })    });
     function addData(data) {
@@ -104,12 +118,12 @@
         datatype: 'json',
         url: "{% url 'opencare:getdata' %}",
         data: {
-          'id': 5
+          'id': "{{id}}"
         },
         success: function(data){
           console.log("Update Data");
 	        var val = Math.floor(Math.random() * 10);
-	        addData({'xA':data['result'],'yA':5});
+	        addData({'xA':data['temperaturereading'],'yA':5});
         },
         error: function(){
           console.log("error");
@@ -137,6 +151,12 @@
     background-color: rgb(251, 251, 251);
     margin: 10px;
   }
+  .y{
+    flex:3;
+    text-align: center;
+    background-color: rgb(251, 251, 251);
+    margin: 10px;
+  }
   h1{
     text-align: center;
   }
@@ -145,13 +165,31 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
 </head>
 <body>
-  <h1>Sensors</h1>
+  {% if user.is_authenticated %}
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a class="w3-bar-item w3-button" type="submit" href="/signout"><b>Open</b>Care</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right">
+        <a href="/profile" class="w3-bar-item w3-button" type="submit">Profile</a>
+        <a href="/yourdata" class="w3-bar-item w3-button" type="submit">Your Data</a>
+        <a href="/favorites" class="w3-bar-item w3-button" type="submit">Favorites</a>
+        <a href="/search" class="w3-bar-item w3-button"><b>Search</b></a>
+      </div>
+    </div>
+  </div>
+  <br><br><br>
+  <h3><center><b>Live Readings for {{id}}</b></center></h3>
+  <br>
+  <div id="orientationContainer" class="container">
   <div id="xAccel" class="x">
       <canvas id="xAccelChart"></canvas>
   </div>
   <div id="yAccel" class="y">
-
     <canvas id="yAccelChart"></canvas>
   </div><!--yAccel-->
+  </div> 
+  {% else %}
+  {% endif %}
 </body>
 </html>

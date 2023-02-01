@@ -62,6 +62,28 @@
       .shadow-none {
       box-shadow: none!important;
       }
+      .button{
+        background-color: rgba(51, 51, 51, 0.05);
+        border-radius: 8px;
+        border-width: 0;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        list-style: none;
+        margin: 0;
+        padding: 5px 12px;
+        text-align: center;
+        transition: all 200ms;
+        vertical-align: baseline;
+        white-space: nowrap;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+      }
     </style>
 
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -75,7 +97,7 @@
       <!-- Float links to the right. Hide them on small screens -->
       <div class="w3-right">
         <a href="/profile" class="w3-bar-item w3-button" type="submit">Profile</a>
-        <a href="#about" class="w3-bar-item w3-button">Your Data</a>
+        <a href="/yourdata" class="w3-bar-item w3-button">Your Data</a>
         <a class="w3-bar-item w3-button" type="submit">Favorites</a>
         <a href="#about" class="w3-bar-item w3-button"><b>Search</b></a>
       </div>
@@ -106,7 +128,7 @@
                   <div class="card-body">
                         <div class="row">
                         <div class="col-sm-3">
-                        <h6 class="mb-0">Full Name</h6>
+                        <h6 class="mb-0"><b>Full Name</b></h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
                         {{user.first_name}} {{user.last_name}}
@@ -115,7 +137,7 @@
                         <hr>
                         <div class="row">
                         <div class="col-sm-3">
-                        <h6 class="mb-0">Email</h6>
+                        <h6 class="mb-0"><b>Email</b></h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
                         {{user.email}}
@@ -128,7 +150,7 @@
                         <hr>
                         <div class="row">
                         <div class="col-sm-3">
-                        <h6 class="mb-0">About Me</h6>
+                        <h6 class="mb-0"><b>About Me</b></h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
                         <textarea id="aboutme" name="aboutme" rows="4" cols="50">{{aboutme}}</textarea>
@@ -137,7 +159,7 @@
                         <hr>
                         <div class="row">
                         <div class="col-sm-3">
-                        <h6 class="mb-0">Linked Devices</h6>
+                        <h6 class="mb-0"><b>Linked Devices</b></h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
                         <p id="demo"></p>
@@ -147,17 +169,19 @@
                           let text = "";
                           for (let i = 0; i < devices1.length - 1; i++) {
                             text = text + devices1[i] + "  ";
-                            text = text + "<button name ='remove' type='submit' value='"+i+"''>remove</button>";
-                            text = text + "<br>"
+                            text = text + "<button name ='remove' class='button' type='submit' value='"+i+"''>remove</button>";
+                            text = text + "<br><br>"
                           }
                           document.getElementById("demo").innerHTML = text;
                         </script>
-                        <div class="col-sm-9 text-secondary">Add Device</div>
+                        <div class="col-sm-3">
+                        <h6 class="mb-0"><b>Add Device</b></h6>
+                        </div>
                         <input type="text" id="newdevice" name="newdevice">
                         </div>
                         </div>
                         <br>
-                        <input type="submit" value="Save">
+                        <input type="submit" class="button" value="Save">
                   </div>
                   </form>
                   </div>
