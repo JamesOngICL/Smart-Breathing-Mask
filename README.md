@@ -74,8 +74,8 @@ It keeps track of their calories by measuring steps, (heart rate?), while also m
 
 * Multithreading - in progress - James
 * Setting up air quality sensor - Milan
-* Setting up marketing website - Matthew? otherwise Milan
-* 
+* Setting up marketing website - Milan
+* Video script ready by Friday evening - Milan
 
 ## Aims
 
