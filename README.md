@@ -4,6 +4,12 @@ It's a project for the 3rd Year EE Embedded Systems Module.
 
 Project guide is available here: https://github.com/edstott/ES-CW1/blob/main/README.md
 
+## Final Idea
+
+Smart mask that can also be used as a wearable. It is good for doctors, they are our target customers, as well as people who live in very polluted areas, where air quality can vary a lot. 
+
+It keeps track of their calories by measuring steps, (heart rate?), while also monitoring the surrounding air quality. 
+
 
 ## Ideas
 
