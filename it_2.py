@@ -200,36 +200,47 @@ def fifo_data_queue(make_q):
 '''
 
 def reading_to_queue(make_q):
-    read_address = [0x3B,0x3D,0x3F]
+    curr_time = time.time()
+    elapse_time = 0
+    try:
+        while elapse_time<15:
+            elapse_time = time.time()-curr_time
 
-	#deduce time elapsed
-    init_acc = gyro_accelerometer_sensor()
-    init_acc.initialize_accelerometer()
-	#get accelerometer vectorized readings
-    Ax, Ay, Az = init_acc.process_accelerometer_vals(read_address)
-    postable_dict = {'Accelerometer':[Ax,Ay,Az]}
+            read_address = [0x3B,0x3D,0x3F]
 
-	#put data values in queue
-    make_q.put(postable_dict)
+            #deduce time elapsed
+            init_acc = gyro_accelerometer_sensor()
+            init_acc.initialize_accelerometer()
+            #get accelerometer vectorized readings
+            Ax, Ay, Az = init_acc.process_accelerometer_vals(read_address)
+            postable_dict = {'Accelerometer':[Ax,Ay,Az]}
 
-    sleep(0.85)
+            #put data values in queue
+            make_q.put(postable_dict)
 
-    #get temperature readings vectorized
-    init_temp = temp_hum_sensor()
-    get_value = init_temp.read_temp_hum('temp')
-    postable_dict = {'Temperature':get_value}
+            sleep(0.65)
 
-    #write data values in a queue.
-    make_q.put(postable_dict)
+            #get temperature readings vectorized
+            init_temp = temp_hum_sensor()
+            get_value = init_temp.read_temp_hum('temp')
+            postable_dict = {'Temperature':get_value}
 
-    print(make_q)
+            #write data values in a queue.
+            make_q.put(postable_dict)
 
-    with open("readings.txt","a") as outp:
-            outp.write(str(get_value)+"\n")
-            outp.write(str(Ax)+","+str(Ay)+","+str(Az)+"\n")
-    outp.close()
+            print(make_q)
 
-    sleep(0.85)
+            with open("readings.txt","a") as outp:
+                    outp.write(str(Ax)+","+str(Ay)+","+str(Az)+"\n")
+                    outp.write(str(get_value)+"\n")
+
+            outp.close()
+
+            sleep(0.65)
+    
+    except KeyboardInterrupt:
+        return
+    
     pass
 
 
