@@ -212,10 +212,16 @@ def fifo_data_queue(make_q):
 '''
 
 def reading_to_queue(make_q):
+    print("entered post thread")
     curr_time = time.time()
     elapse_time = 0
     try:
-        while elapse_time<15:
+        print("Posting values")
+
+        while True:
+            # if KeyboardInterrupt:
+            #     break
+
             elapse_time = time.time()-curr_time
 
             read_address = [0x3B,0x3D,0x3F]
@@ -230,7 +236,7 @@ def reading_to_queue(make_q):
             #put data values in queue
             make_q.put(postable_dict)
 
-            sleep(0.65)
+            sleep(0.35)
 
             #get temperature readings vectorized
             init_temp = temp_hum_sensor()
@@ -241,14 +247,11 @@ def reading_to_queue(make_q):
             make_q.put(postable_dict)
 
             print(make_q)
+            print("Temp:",get_value,"Ax:",Ax," Ay:",Ay)
 
-            with open("readings.txt","a") as outp:
-                    outp.write(str(Ax)+","+str(Ay)+","+str(Az)+"\n")
-                    outp.write(str(get_value)+"\n")
+            # outp.close()
 
-            outp.close()
-
-            sleep(0.65)
+            sleep(0.35)
     
     except KeyboardInterrupt:
         return
@@ -267,6 +270,7 @@ class post_to_server(threading.Thread):
         print("Running a Post Thread - Takes Value from Queue")
         simulate_server(self.name)
         print("Thread is Terminating",self.name)
+        pass
 
 
 
@@ -274,14 +278,20 @@ def simulate_server(thread_name):
     curr_time = time.time()
 
     elapse_time = 0
+    print("before while true",thread_name)
 
-    while elapse_time<15:
-        elapse_time = time.time()-curr_time
+    while True:
+        elapse_time = time.time()-curr_time            
+        
+        # if KeyboardInterrupt:
+        #         break
+
         try:
+            print("in try loop")
             get_val = make_q.get(block=False)
-            # if KeyboardInterrupt:
-            #     break
+
         except queue.Empty:
+            print("quEUE EMPTY")
             # if KeyboardInterrupt:
             #     break
             continue
@@ -290,8 +300,8 @@ def simulate_server(thread_name):
             #posts this value to a JSON
             # if KeyboardInterrupt:
             #     break
+            print("observe get_val",get_val)
             track = 0
-
             client = requests.session()
             # Retrieve the CSRF token first
             client.get(URL)  # sets cookie
@@ -312,16 +322,18 @@ def simulate_server(thread_name):
                     put_key = "Sensor:accelerometerreading"
 
             login_data = {'test':get_val, put_key:tmp,'address':'MS3120001','csrfmiddlewaretoken':csrftoken}
+            
+            print("Posting to Server:",login_data)
 
             r = client.post(URL, data=login_data, headers=dict(Referer=URL))
             time.sleep(0.001)
             track = track + 0.001
             print(len(r.text))
 
-            with open("my_test.json","a") as outp:
-                json.dump(get_val,outp)
-                json.dump("\\n\\",outp)
-            outp.close()
+            # with open("my_test.json","a") as outp:
+            #     json.dump(get_val,outp)
+            #     json.dump("\\n\\",outp)
+            # outp.close()
 
     return
 
@@ -339,16 +351,21 @@ thread_post = post_to_server("my_test")
 value_thread.start()
 thread_post.start()
 
+print("---------Threads Initialized------------")
 curr_time = time.time()
 
 elapse_time = 0
 print("first elapse",elapse_time)
 
-while elapse_time<15:
+'''
+while True:
+    if KeyboardInterrupt:
+        break
     elapse_time = time.time()-curr_time
+'''
 
-value_thread.join()
-thread_post.join()
+# value_thread.join()
+# thread_post.join()
 
 # while elapse_time<15:
 
