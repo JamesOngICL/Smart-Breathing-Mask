@@ -236,7 +236,7 @@ def reading_to_queue(make_q):
             #put data values in queue
             make_q.put(postable_dict)
 
-            sleep(0.35)
+            sleep(0.05)
 
             #get temperature readings vectorized
             init_temp = temp_hum_sensor()
@@ -251,7 +251,7 @@ def reading_to_queue(make_q):
 
             # outp.close()
 
-            sleep(0.35)
+            sleep(0.05)
     
     except KeyboardInterrupt:
         return
@@ -287,11 +287,11 @@ def simulate_server(thread_name):
         #         break
 
         try:
-            print("in try loop")
+            # print("in try loop")
             get_val = make_q.get(block=False)
 
         except queue.Empty:
-            print("quEUE EMPTY")
+            # print("quEUE EMPTY")
             # if KeyboardInterrupt:
             #     break
             continue
