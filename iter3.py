@@ -16,7 +16,7 @@ import time
 import math
 import random
 
-URL = 'http://146.169.244.33:8080'
+URL = 'http://146.169.252.125:8080'
 
 
 
@@ -78,7 +78,7 @@ class temp_hum_sensor():
         si7021_ADD = 0x40 #Add the I2C bus address for the sensor here
         si7021_READ_TEMPERATURE = operation[mode] #Add the command to read temperature here
 
-        bus = smbus2.SMBus(1)
+        # bus = smbus2.SMBus(1)
 
         #Set up a write transaction that sends the command to measure temperature
         cmd_meas_temp = smbus2.i2c_msg.write(si7021_ADD,[si7021_READ_TEMPERATURE])
