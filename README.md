@@ -79,6 +79,7 @@ Marketing website: https://pmz7696.wixsite.com/opencare
 * Setting up air quality sensor - Milan
 * Setting up marketing website - Milan
 * Video script ready by Friday evening - Milan
+* Reorganising code in an OOP way - Milan
 
 ## Aims
 
