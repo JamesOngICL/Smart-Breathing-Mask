@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+      .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Authentication</title>
+  </head>
+  <body>
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a href="#home" class="w3-bar-item w3-button"><b>LOAN</b> Hub</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        <a href="#about" class="w3-bar-item w3-button">About</a>
+        <a class="w3-bar-item w3-button" type="submit" href="/signin">Sign In</a>
+        <a class="w3-bar-item w3-button" type="submit" href="/signup">Sign Up</a>
+      </div>
+    </div>
+  </div>
+  <div style="margin-left:auto; margin-right:auto; width:50%">
+	  <h3>Signup</h3>
+      <form action="/signup" method="post">
+      {% csrf_token %}
+            <label for="">Username</label><br>
+            <input type="text" id="username" name="username" placeholder="Create a username (only letters or numbers)" Required>
+
+            <br><br>
+
+            <label for="">First Name</label><br>
+            <input type="text" id="firstname" name="firstname" placeholder="John" Required>
+
+            <br><br>
+
+            <label for="">Last Name</label><br>
+            <input type="text" id="lastname" name="lastname" placeholder="Smith" Required>
+
+            <br><br>
+
+            <label for="">Email</label><br>
+            <input type="text" id="email" name="email" placeholder="" Required>
+
+            <br><br>
+
+            <label for="">Password</label><br>
+            <input type="password" id="password1" name="password1" placeholder="" Required>
+
+            <br><br>
+
+            <label for="">Confirm your password</label><br>
+            <input type="password" id="password2" name="password2" placeholder="" Required>
+
+            <br><br>
+
+            <button type="submit">Sign Up</button>
+      </form>
+    </div>
+  </body>
+</html>
