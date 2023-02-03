@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+      .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+      }
+      body{
+      margin-top:20px;
+      color: #1a202c;
+      text-align: left;
+      background-color: #fff;    
+      }
+      .main-body {
+      padding: 15px;
+      }
+      .card {
+      box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+      }
+      .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      word-wrap: break-word;
+      background-color: #fff;
+      background-clip: border-box;
+      border: 0 solid rgba(0,0,0,.125);
+      border-radius: .25rem;
+      }
+      .card-body {
+      flex: 1 1 auto;
+      min-height: 1px;
+      padding: 1rem;
+      }
+      .gutters-sm {
+      margin-right: -8px;
+      margin-left: -8px;
+      }
+      .gutters-sm>.col, .gutters-sm>[class*=col-] {
+      padding-right: 8px;
+      padding-left: 8px;
+      }
+      .mb-3, .my-3 {
+      margin-bottom: 1rem!important;
+      }
+      .bg-gray-300 {
+      background-color: #fff;
+      }
+      .h-100 {
+      height: 100%!important;
+      }
+      .shadow-none {
+      box-shadow: none!important;
+      }
+      .button{
+        background-color: rgba(51, 51, 51, 0.05);
+        border-radius: 8px;
+        border-width: 0;
+        color: #000000;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        list-style: none;
+        margin: 0;
+        padding: 10px 12px;
+        text-align: center;
+        transition: all 200ms;
+        vertical-align: baseline;
+        white-space: nowrap;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        float: right;
+      }
+      .footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          background-color: grey;
+          color: white;
+          text-align: center;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Authentication</title>
+  </head>
+  <body>
+  {% if user.is_authenticated %}
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a class="w3-bar-item w3-button" type="submit" href="/signout"><b>Open</b>Care</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right">
+            <a href="/profile" class="w3-bar-item w3-button" type="submit">Profile</a>
+            <a href="/yourdata" class="w3-bar-item w3-button" type="submit">Your Data</a>
+            <a href="/favorites" class="w3-bar-item w3-button" type="submit">Favorites</a>
+            <a href="/search" class="w3-bar-item w3-button"><b>Search</b></a>
+      </div>
+    </div>
+  </div>
+  <br><br>
+  <div class="container">
+      <div class="main-body">
+            <div class="row gutters-sm">
+              <p id="demo"></p>
+              <script>
+                var devices = "{{devices}}";
+                const devices1 = devices.split(",");
+                let text = "";
+                let openformat = "<div class='col-md-4 mb-3'><div class='card'><div class='card-body'><div class='d-flex flex-column align-items-center text-center'><div class='mt-3'>";
+                let closeformat = "</div></div></div></div></div>";
+                  for (let i = 0; i < devices1.length - 1; i++){
+                  const code1 = devices1[i].split("(")[1];
+                  const code2 = code1.split(")")[0];
+                  text = text + openformat + "<h4><b>" + devices1[i] + "<b><a class='btn btn-info '' href='/livechart/"+code2+"'><button class='button'>View Live Data</button></a></h4>" + closeformat;
+                }
+                document.getElementById("demo").innerHTML = text;
+              </script>
+            </div>
+      </div>
+  </div>
+  </div>
+  <footer class="footer">
+    <p>{{aiquery}}</p>
+  </footer>
+  {% else %}
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a href="#home" class="w3-bar-item w3-button"><b>Open</b>Care</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        <a href="#about" class="w3-bar-item w3-button">About</a>
+        <a class="w3-bar-item w3-button" href="/signin">Sign In</a>
+        <a class="w3-bar-item w3-button" href="/signup">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
+    {% load static %}
+    <img class="w3-image" src="{% static 'media/title2.jpg' %}" alt="Architecture" width="1500" height="800">
+    <div class="w3-display-middle w3-margin-top w3-center">
+      <h1 class="w3-xxlarge w3-text-white"><span class="w3-padding w3-black w3-opacity-min"><b>Open</b>Care</span></h1>
+    </div>
+  </header>
+
+  <!-- Page content 
+	//https://www.youtube.com/watch?v=H5LneQjrnF4 -->
+  <div class="w3-content w3-padding" style="max-width:1564px">
+
+    <!-- About Section -->
+    <div class="w3-container w3-padding-32" id="about">
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16"><b>About</b></h3>
+      <p>A platform for guardians and users to keep track of medical data using our different set of wearables.
+      </p>
+    </div>
+
+    <!-- What we support Section -->
+    <div class="w3-container w3-padding-64">
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/verify.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>Verify your identity</b></h3>
+        <p>Verify your identity as a guardian or user to start your journey.</p>
+      </div>
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/fundacc.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>Link your device</b></h3>
+        <p>Link your wearable with your account.</p>
+      </div>
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/condition.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>View your data</b></h3>
+        <p>View your data alongside additional AI generated comments.</p>
+      </div>
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/acceptorreject.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>Share your data</b></h3>
+        <p>Make your data available to the public or to a select few individuals.</p>
+      </div>
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/borrow.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>View other's data</b></h3>
+        <p>Find publicly listed data or data shared with you. Shortlist them to keep track of your loved ones.</p>
+      </div>
+    </div>
+
+    <!-- Our Devices Section -->
+    <div class="w3-container w3-padding-32" id="about">
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16"><b>Our Devices</b></h3>
+      <h4><b>Smart Breathing Mask 1.0</b></h4>
+      </p>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="w3-container w3-padding-32" id="contact">
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16"><b>Contact</b></h3>
+      <p>Contact us if you have any concerns.</p>
+      <form action="/action_page.php" target="_blank">
+        <input class="w3-input w3-border" type="text" placeholder="Name" required name="Name">
+        <input class="w3-input w3-section w3-border" type="text" placeholder="Email" required name="Email">
+        <input class="w3-input w3-section w3-border" type="text" placeholder="Subject" required name="Subject">
+        <input class="w3-input w3-section w3-border" type="text" placeholder="Comment" required name="Comment">
+        <button class="w3-button w3-black w3-section" type="submit">
+          <i class="fa fa-paper-plane"></i> SEND MESSAGE
+        </button>
+      </form>
+    </div>
+  <!-- Image of location/map -->
+  <div class="w3-container">
+    <img src="{% static 'media/stripeimage.png' %}" class="w3-image" style="width:10%">
+  </div>
+  <!-- End page content -->
+  </div>
+  <!-- Footer -->
+  <footer class="w3-center w3-black w3-padding-16">
+    <p>Created at Imperial College London</p>
+  </footer>
+  {% endif %}
+  </body>
+</html>

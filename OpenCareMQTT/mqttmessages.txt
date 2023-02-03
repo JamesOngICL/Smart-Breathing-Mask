@@ -1,0 +1,1 @@
+{'Sensor:temperaturereading': '29.53928361426443', 'address': 'MS3120001'}
