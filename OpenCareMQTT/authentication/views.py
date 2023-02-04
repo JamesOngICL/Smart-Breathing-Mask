@@ -65,6 +65,9 @@ def signup(request):
             password1 = request.POST['password1']
             password2 = request.POST['password2']
             
+            if User.objects.filter(username = username).exists():
+                  return render(request, "authentication/signup.html")
+            
             myuser = User.objects.create_user(username, email, password1)
             myuser.first_name = fname
             myuser.last_name = lname
@@ -73,7 +76,7 @@ def signup(request):
             
             messages.success(request, "Your account has been sucessfully created!")
             
-            return redirect('signin')
+            return redirect("/signin")
       
       return render(request, "authentication/signup.html")
 
