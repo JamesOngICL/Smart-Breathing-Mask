@@ -368,7 +368,9 @@ def reading_to_queue(make_q):
             make_q.put(postable_dict)
 
             with open("readings.txt",'a') as file:
-                file.write("Temperature:",str(init_temp)," ,Ax:",str(Ax)," ,Ay:",str(Ay)," Az:",str(Az))
+                my_str = "Temperature:"+str(init_temp)+" ,Ax:"+str(Ax)+" ,Ay:"+str(Ay)," Az:"+str(Az)
+                print(my_str)
+                file.write(str(my_str))
             file.close()
 
             print("Temp:",get_value,"Ax:",Ax," Ay:",Ay)
@@ -385,7 +387,8 @@ def reading_to_queue(make_q):
             make_q.put(postable_dict)
 
             with open("readings.txt",'a') as file:
-                file.write("Co2 PPM:",str(air_readings[0])," ,VOC ppb:",str(air_readings[1]))
+                my_str = "Co2 PPM: "+str(air_readings[0])+" ,VOC ppb: "+str(air_readings[1])
+                file.write(str(my_str))
             file.close()
 
 
@@ -399,7 +402,6 @@ def reading_to_queue(make_q):
     except KeyboardInterrupt:
         return
     
-    pass
 
 
 class post_to_server(threading.Thread):
@@ -426,14 +428,14 @@ class post_to_server(threading.Thread):
 
         #accesses the queues and puts data inside.
         print("Running a Post Thread - Takes Value from Queue")
-        post_to_server(self.name)
+        thread_to_server(self.name)
         print("Thread is Terminating",self.name)
 
         pass
 
 
 
-def post_to_server(thread_name):
+def thread_to_server(thread_name):
 
     '''
     
