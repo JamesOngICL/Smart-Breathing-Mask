@@ -21,7 +21,6 @@ URL = 'http://146.169.252.125:8080'
 
 
 #some MPU6050 Registers and their Address
-
 class temp_hum_sensor():
 
     def __init__(self):
@@ -30,6 +29,7 @@ class temp_hum_sensor():
 
     def conv_temperature(self,value):
         """
+
         Converts the temperature value to relevant integer format
 
         """
@@ -40,7 +40,12 @@ class temp_hum_sensor():
         return temp
 
     def conv_humidity(self,value):
-        """Reads the humidity byte value and converts to float."""
+
+        """
+
+        Reads the humidity byte value and converts to float.
+        
+        """
 
         #humidity mapping function
         humidity = 125*value/65536
@@ -103,6 +108,7 @@ class temp_hum_sensor():
         print("Get reading temp_sensor ", value)
 
         return value
+
 
 class gyro_accelerometer_sensor():
 
@@ -191,25 +197,6 @@ print (" Reading Data of Gyroscope and Accelerometer")
 
 #makes a queue where we can push data
 
-'''To edit
-
-def fifo_data_queue(make_q):
-    curr_time = time.time()
-    elapse_time = 0
-    try:
-        while elapse_time<15:
-            elapse_time = time.time()-curr_time
-
-            gen_random = random.randint(0,9)
-            with open("debug.txt","a") as outp:
-                outp.write(str(gen_random)+"\n")
-            outp.close()
-            time.sleep(0.4)
-
-            make_q.put(gen_random)
-    except KeyboardInterrupt:
-        return
-'''
 
 def reading_to_queue(make_q):
     print("entered post thread")
@@ -219,8 +206,6 @@ def reading_to_queue(make_q):
         print("Posting values")
 
         while True:
-            # if KeyboardInterrupt:
-            #     break
 
             elapse_time = time.time()-curr_time
 
@@ -249,8 +234,6 @@ def reading_to_queue(make_q):
             print(make_q)
             print("Temp:",get_value,"Ax:",Ax," Ay:",Ay)
 
-            # outp.close()
-
             sleep(0.05)
     
     except KeyboardInterrupt:
@@ -261,39 +244,44 @@ def reading_to_queue(make_q):
 
 class post_to_server(threading.Thread):
     def __init__(self,name):
+        '''
+        
+        How multiple threads are handled in python. See documentation for python multithreading protocols. 
+
+        '''
+
         threading.Thread.__init__(self)
         #characterizes the type of thread. Should this be
         self.name = name
 
     def run(self):
+
         #accesses the queues and puts data inside.
         print("Running a Post Thread - Takes Value from Queue")
-        simulate_server(self.name)
+        post_to_server(self.name)
         print("Thread is Terminating",self.name)
+
         pass
 
 
 
-def simulate_server(thread_name):
+def post_to_server(thread_name):
     curr_time = time.time()
 
     elapse_time = 0
     print("before while true",thread_name)
 
     while True:
-        elapse_time = time.time()-curr_time            
         
-        # if KeyboardInterrupt:
-        #         break
-
         try:
-            # print("in try loop")
             get_val = make_q.get(block=False)
 
         except queue.Empty:
-            # print("quEUE EMPTY")
-            # if KeyboardInterrupt:
-            #     break
+            '''
+
+
+            
+            '''
             continue
 
         else:
