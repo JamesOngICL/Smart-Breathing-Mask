@@ -4,6 +4,29 @@ import time
 import extfunctions
 import ast
 
+# calculate heart rate based on peaks recorded in graph
+# create a buffer that stores the last 20 values of heart rate
+# record te time between peaks 
+# calculate the beats per minute using it
+# update the heart rate in the database
+def calculate_bpm(data, buffer_size=20):
+    r_peaks = []
+    buffer = []
+    start_time = time.time()
+    for i in range(len(data)):
+        buffer.append((data[i], time.time() - start_time))
+        if len(buffer) >= buffer_size:
+            peak = max(buffer, key=lambda x: x[0])
+            if peak[0] == data[i]:
+                r_peaks.append(peak[1])
+            buffer = []
+    if len(r_peaks) < 2:
+        return None
+    time_diff = (r_peaks[-1] - r_peaks[0]) / len(r_peaks)
+    bpm = 60 / time_diff
+    return bpm
+
+
 def updatereadingmqtt(message):
       tmp = ast.literal_eval(message)
       print(tmp)
@@ -14,16 +37,23 @@ def updatereadingmqtt(message):
                   val = ""
                   if n[1]=="temperaturereading":
                         val = tmp[i]
+                        bpm = calculate_bpm(val)
+                        extfunctions.updatereading(tmp["bpm"],n[1],val)
+                        
+                  elif n[1]=="heartratereading":
+                        pass
+                              
                   elif n[1]=="accelerometerreading":
                         print("vals")
                         print(float(tmp[i][0]))
-                        print(float(tmp[i][0]))
-                        print(float(tmp[i][0]))
+                        print(float(tmp[i][1]))
+                        print(float(tmp[i][2]))
                         val = (float(tmp[i][0])**2 + float(tmp[i][1])**2 + float(tmp[i][2])**2)**0.5
                   extfunctions.updatereading(tmp["address"],n[1],val)
+                  
 
 def on_message(client, userdata, message):
-      print("received message: " ,str(message.payload.decode("utf-8")))
+      print("received message: " , str(message.payload.decode("utf-8")))
 
       #Execute this upon recieving message
       file = open("mqttmessages.txt","w")
@@ -31,9 +61,9 @@ def on_message(client, userdata, message):
       file.close()
       updatereadingmqtt(str(message.payload.decode("utf-8")))
 
-mqttBroker ="test.mosquitto.org"
-client = mqtt.Client("Webserver")
-client.connect(mqttBroker) 
-client.subscribe("IC.embedded/jomp/test")
+mqttBroker ="localhost"
+client = mqtt.Client()
+client.connect(mqttBroker, port=1883) 
+client.subscribe("sensors/omar/temp")
 
 client.on_message=on_message 
