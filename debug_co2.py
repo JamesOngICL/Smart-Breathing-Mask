@@ -16,7 +16,7 @@ import time
 import math
 import random
 
-bus = smbus2.SMBus(1)
+bus = smbus2.SMBus(3)
 
 '''
 

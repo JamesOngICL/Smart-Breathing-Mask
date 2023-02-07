@@ -16,7 +16,7 @@ import time
 import math
 import random
 
-URL = 'http://146.169.244.33:8080'
+URL = 'http://146.169.252.217:8000'
 
 
 

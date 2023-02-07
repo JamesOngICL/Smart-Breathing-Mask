@@ -182,10 +182,10 @@ while elapse_time<50:
 	elapse_time = time.time()-curr_time
 
 	#get accelerometer vectorized readings
-	Ax, Ay, Az = process_accelerometer_vals(read_address)
+	# Ax, Ay, Az = process_accelerometer_vals(read_address)
 
-	print ("\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az)
+	# print ("\tAx=%.2f g" %Ax, "\tAy=%.2f g" %Ay, "\tAz=%.2f g" %Az)
 
 	#get temperature readings vectorized
-	# get_value = read_temp_hum('temp')
-	# print("Read Temperature As: ",get_value)
+	get_value = read_temp_hum('temp')
+	print("Read Temperature As: ",get_value)

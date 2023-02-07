@@ -26,10 +26,10 @@ def make_array(temperature,curr_arr=[]):
     dict_values = {"temperatures":curr_arr}
     print("in make_array: ",dict_values)
 
-    with open("temperature.json", "w") as out_file:
-        json.dump(dict_values,out_file)
-    out_file.close()
-    time.sleep(0.5)
+    # with open("temperature.json", "w") as out_file:
+    #     json.dump(dict_values,out_file)
+    # out_file.close()
+    # time.sleep(0.5)
 
     return curr_arr
 
@@ -69,7 +69,7 @@ curr_time = time.time()
 arr_inspect = []
 
 
-while elapse_time<8:
+while True:
 
     #records for about 8 seconds and gets readings
     elapse_time= time.time()-curr_time

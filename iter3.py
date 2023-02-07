@@ -16,7 +16,7 @@ import time
 import math
 import random
 
-URL = 'http://146.169.252.125:8080'
+URL = 'http://146.169.252.217:8000'
 
 
 
@@ -258,14 +258,14 @@ class post_to_server(threading.Thread):
 
         #accesses the queues and puts data inside.
         print("Running a Post Thread - Takes Value from Queue")
-        post_to_server(self.name)
+        serv_post(self.name)
         print("Thread is Terminating",self.name)
 
         pass
 
 
 
-def post_to_server(thread_name):
+def serv_post(thread_name):
     curr_time = time.time()
 
     elapse_time = 0

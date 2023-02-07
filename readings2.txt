@@ -1,0 +1,9 @@
+Co2 PPM: 400 ,VOC ppb: 0
+Co2 PPM: 441 ,VOC ppb: 6
+Co2 PPM: 466 ,VOC ppb: 10
+Co2 PPM: 482 ,VOC ppb: 12
+Co2 PPM: 486 ,VOC ppb: 13
+Co2 PPM: 486 ,VOC ppb: 13
+Co2 PPM: 492 ,VOC ppb: 14
+Co2 PPM: 492 ,VOC ppb: 14
+Co2 PPM: 1659 ,VOC ppb: 297
