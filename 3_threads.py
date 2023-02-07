@@ -16,8 +16,6 @@ import time
 import math
 import random
 
-from adafruit_extended_bus import ExtendedI2C as I2C
-
 
 URL = 'http://146.169.252.125:8080'
 
@@ -199,149 +197,6 @@ gp_bus = smbus2.SMBus(3)
 print (" Reading Data of Files")
 
 
-
-class air_sensor():
-
-    def __init__(self,address=0x5A):
-        '''
-
-        Initializes the Co2 sensor and other parameters to be used. On my raspberry pi I got the i2c address of 0x5A. Hence I used this parameter,
-
-        '''
-        #CO2 sensor is default programmed to 0x5a on I2C bus.
-        self.addr = address
-        self.app_reg = 0xF4
-        self.reset_reg = 0xFF
-        self.meas_mode = 0x01
-        self.stat_reg = 0x00
-        self.co2_air_qual = None
-
-
-
-    def setup_co2_sensor(self):
-
-        '''
-
-        Method and means of initializing a carbon dioxide sensor.
-
-        '''
-        print("Running Initializations")
-
-        #Resetthe CO2 sensor
-        gp_bus.write_i2c_block_data(self.addr,self.reset_reg,[0x11,0xE5,0x72,0x8A])
-        time.sleep(0.3)
-
-        #write to the status register
-        gp_bus.write_byte_data(self.addr,self.stat_reg,1)
-
-        #Writing to application register
-        gp_bus.write_i2c_block_data(self.addr,self.app_reg, [])
-        time.sleep(0.3)
-
-        # Set to 72 to increase sensor reading rate. See datasheet for justification.
-        gp_bus.write_byte_data(self.addr,self.meas_mode,24)
-
-        # print("working")
-        time.sleep(0.3)
-        print("Finished CO2 Initialization")
-
-        return
-
-
-
-    def get_air_params(self):
-
-        '''
-
-        Function to update the self.co2_air_qual parameter
-
-        '''
-
-        #set a time limit of 12 seconds for readings to be produced
-        read_duration = 14
-        curr_time = time.time()
-        elapse_time = 0
-
-        while elapse_time<read_duration:
-
-            #deduce the current time passed see if data available.
-            elapse_time = time.time()-curr_time
-            # print("Oggles")
-
-            read_status = gp_bus.read_byte_data(self.addr,0x00)
-            # print("read_status",read_status)
-
-            tmp = format(read_status,"#010b")[2:]
-            time.sleep(0.5)
-            co2_air_qual = gp_bus.read_i2c_block_data(self.addr,0x02,4)
-            # print("debug ",co2_air_qual)
-            print("oops",co2_air_qual,tmp)
-
-            #Control flow condition indicating that data is ready and avaialble
-            if tmp[4]==str(1):
-                print("entering the condition")
-
-                co2_air_qual = gp_bus.read_i2c_block_data(self.addr,0x02,4)
-                # print("Reading CO2 & Air Quality Levels",co2_air_qual)
-
-                time.sleep(0.1)
-
-                #update the co2 parameter stored in class object.
-                self.co2_air_qual = co2_air_qual
-
-                #break and return
-                return co2_air_qual
-
-        print("no data available")
-
-        return None
-
-
-    def get_co2_vol_comp(self):
-        '''
-
-        Inputs (assuming no errors):
-        type(array) -> self.co2_arr_qual
-
-
-        Outputs (assuming no errors):
-        type(array) -> co2_level and voc_level corresponding to ppm of C02 detectable from atmosphere and volatile organic compounds.
-
-        Notes:
-        eco2 is in the first 2 bit fields of self.co2_air_qual.
-        Perform an LSL (logical shift left from IAC) to get the relevant param ppb
-
-        '''
-        #Try to process co2 data and send this. Error handling in class rather than multithread.
-        try:
-
-            #get value params
-            left_co2_val, right_co2_val = self.co2_air_qual[0],self.co2_air_qual[1]
-
-            #gets the left_addr_val from CO2 sensor
-            left_co2_val = left_co2_val<<8
-
-            #aggregate the values to get co2_level
-            co2_level = left_co2_val+right_co2_val
-
-            #reads in a litle endian format.
-            left_voc, right_voc = self.co2_air_qual[2], self.co2_air_qual[3]
-
-            #gets the volatile organic copound level
-            voc_level = (left_voc<<8)+right_voc
-
-            #returns the co2 and volatile organic compounds levels
-            return [co2_level,voc_level]
-
-        except:
-            #error handling function
-            return None
-
-
-#makes a queue where we can push data
-
-
-
 def reading_to_queue(make_q,lock):
 
     print("entered post thread")
@@ -353,42 +208,53 @@ def reading_to_queue(make_q,lock):
 
         #To tidy this while Loop looks very, very convoluted.
         while True:
+            try:
 
-            elapse_time = time.time()-curr_time
+                elapse_time = time.time()-curr_time
 
-            read_address = [0x3B,0x3D,0x3F]
+                read_address = [0x3B,0x3D,0x3F]
 
-            #get accelerometer vectorized readings
-            init_acc = gyro_accelerometer_sensor()
-            init_acc.initialize_accelerometer()
-            Ax, Ay, Az = init_acc.process_accelerometer_vals(read_address)
-            postable_dict = {'Accelerometer':[Ax,Ay,Az]}
+                #get accelerometer vectorized readings
+                init_acc = gyro_accelerometer_sensor()
+                init_acc.initialize_accelerometer()
+                Ax, Ay, Az = init_acc.process_accelerometer_vals(read_address)
+                postable_dict = {'Accelerometer':[Ax,Ay,Az]}
 
-            #put data values in queue
-            make_q.put(postable_dict)
+                #put data values in queue
+                make_q.put(postable_dict)
 
-            sleep(0.25)
+                sleep(0.05)
 
-            #get temperature readings vectorized
-            init_temp = temp_hum_sensor()
-            get_value = init_temp.read_temp_hum('temp')
-            postable_dict = {'Temperature':get_value}
-            make_q.put(postable_dict)
+                #get temperature readings vectorized
+                init_temp = temp_hum_sensor()
+                get_value = init_temp.read_temp_hum('temp')
+                postable_dict = {'Temperature':get_value}
+                make_q.put(postable_dict)
 
-            #has the effect of putting locks that act as a thread safe data structure.
-            with lock:
+                #has the effect of putting locks that act as a thread safe data structure.
+                with lock:
 
+                    with open("readings.txt",'a') as file:
+                        my_str = "Temperature:"+str(init_temp)+" ,Ax:"+str(Ax)+" ,Ay:"+str(Ay)," Az:"+str(Az)
+                        print(my_str)
+                        file.write(str(my_str)+"\n")
+                    file.close()
+
+
+                print("Temp:",get_value,"Ax:",Ax," Ay:",Ay)
+
+                sleep(0.05)
+            except KeyboardInterrupt:
+                break
+
+            except:
+                print("file reached error")
                 with open("readings.txt",'a') as file:
-                    my_str = "Temperature:"+str(init_temp)+" ,Ax:"+str(Ax)+" ,Ay:"+str(Ay)," Az:"+str(Az)
-                    print(my_str)
-                    file.write(str(my_str)+"\n")
+                        my_str = "Temperature:"+str(init_temp)+" ,Ax:"+str(Ax)+" ,Ay:"+str(Ay)," Az:"+str(Az)
+                        print(my_str)
+                        file.write("ERRROR")
                 file.close()
-
-
-            print("Temp:",get_value,"Ax:",Ax," Ay:",Ay)
-
-            sleep(0.25)
-
+                time.sleep(0.1)
 
     except KeyboardInterrupt:
         return
@@ -467,6 +333,199 @@ def thread_to_server(thread_name):
 
     return
 
+gp_bus = smbus2.SMBus(3)
+
+
+def oops_new(addr):
+
+    co2_meas = measure_vocs()
+
+    while True:
+
+        try:
+            
+            temp_val = co2_meas.read_co2_vals(addr)
+            conv_value = co2_meas.convert_co2_vals(temp_val)
+
+            postable_dict = {'co2_air_qual':conv_value}
+            make_q.put(postable_dict)
+
+            print("converted CO2",conv_value)
+            
+            with open("readings2.txt",'a') as file:
+                my_str = "Co2 PPM: "+str(conv_value[0])+" ,VOC ppb: "+str(conv_value[1])
+                file.write(str(my_str)+"\n")
+            file.close()
+
+        except KeyboardInterrupt:
+            break
+
+        except:
+            co2_meas.init_co2_new()
+            time.sleep(0.2)
+
+    pass
+
+
+class measure_vocs():
+    def __init__(self):
+
+        return 
+
+    def init_co2_new(self):
+
+
+        #initalizes the smbus2 sensors mode
+        stat_reg = 0x00
+        addr = 0x5A
+        app_reg = 0xF4
+        reset_reg = 0xFF
+
+        print("Running Initializations")
+
+        #Resetthe CO2 sensor
+        gp_bus.write_i2c_block_data(addr,reset_reg,[0x11,0xE5,0x72,0x8A])
+        time.sleep(0.3)
+
+
+        #write to the status register
+        gp_bus.write_byte_data(addr,stat_reg,1)
+
+
+        meas_mode = 0x01
+
+        #Writing to application register
+        gp_bus.write_i2c_block_data(addr,app_reg, [])
+        time.sleep(0.3)
+
+        # print(int(bin_a, 2)) #Base 2(binary)
+        
+        # Set to 72 to increase sensor reading rate. See datasheet for justification. 
+        gp_bus.write_byte_data(addr,meas_mode,24)
+
+        # print("working")
+        time.sleep(0.3)
+        
+        print("Finished CO2 Initialization")
+
+
+    def read_co2_vals(self,i2c_addr):
+
+        #reads the eco2 parameters and VOC level
+        value_read = 0
+        # init_co2_new()
+
+
+        #set a time limit of 15 seconds for readings to be produced
+        read_duration = 15
+        curr_time = time.time()
+        elapse_time = 0
+        while elapse_time<read_duration:
+            print("enter while loop")
+
+            #deduce the current time passed see if data available. 
+
+            elapse_time = time.time()-curr_time
+            read_status = gp_bus.read_byte_data(i2c_addr,0x00)
+            tmp = format(read_status,"#010b")[2:]
+            time.sleep(0.5)
+
+            #Control flow condition indicating that data is ready and avaialble
+            if tmp[4]==str(1):
+                top_eco2 = gp_bus.read_i2c_block_data(i2c_addr,0x02,8)
+                print("Reading CO2 levels",top_eco2)
+                time.sleep(0.1)
+                value_read = 1
+                return top_eco2
+
+        print("no data available")
+
+        return top_eco2
+
+    def convert_co2_vals(self,co2_air_qual):
+            left_co2_val, right_co2_val = co2_air_qual[0],co2_air_qual[1]
+
+            #gets the left_addr_val from CO2 sensor
+            left_co2_val = left_co2_val<<8
+
+            #aggregate the values to get co2_level
+            co2_level = left_co2_val+right_co2_val
+
+            #reads in a litle endian format.
+            left_voc, right_voc = co2_air_qual[2], co2_air_qual[3]
+
+            #gets the volatile organic copound level
+            voc_level = (left_voc<<8)+right_voc
+
+            #returns the co2 and volatile organic compounds levels
+            return [co2_level,voc_level]
+
+
+
+elapse_time = 0
+curr_time = time.time()
+arr_inspect = []
+
+
+
+make_q = queue.Queue()
+
+lock = threading.Lock()
+
+
+#Simulate the CO2 and temperature sensors.
+value_thread = threading.Thread(target=reading_to_queue,args=(make_q,lock),daemon=True)
+thread_co2 = threading.Thread(target=oops_new,args=(0x5A,),daemon=True)
+
+#Simulate the server by posting
+thread_post = post_to_server("my_test")
+
+#Simulate the GPIO CO2 sensor posting.
+# thread_co2 = read_slow_sensor("test_CO2")
+
+
+value_thread.start()
+thread_post.start()
+thread_co2.start()
+
+print("---------Threads Initialized------------")
+curr_time = time.time()
+
+elapse_time = 0
+print("first elapse",elapse_time)
+
+'''
+while True:
+    if KeyboardInterrupt:
+        break
+    elapse_time = time.time()-curr_time
+'''
+
+# value_thread.join()
+# thread_post.join()
+
+# while elapse_time<15:
+
+# 	#Read Accelerometer raw value
+#     read_address = [0x3B,0x3D,0x3F]
+
+#     #deduce time elapsed
+#     elapse_time = time.time()-curr_time
+#     reading_to_queue(make_q)
+
+
+'''
+
+
+
+
+
+#puts value into the multithreaded target
+
+'''
+
+
+
 '''
 def co2_posting(lock):
 
@@ -544,7 +603,6 @@ class read_slow_sensor(threading.Thread):
         print("Finishing")
         pass
 '''
-gp_bus = smbus2.SMBus(3)
 
 '''
 
@@ -606,111 +664,124 @@ gp_bus = smbus2.SMBus(3)
             time.sleep(0.2)
 '''
 
+'''
+class air_sensor():
 
-def oops_new(addr):
-    co2_meas = measure_vocs()
-    while True:
-        try:
-            
-            temp_val = co2_meas.read_co2_vals(addr)
-            conv_value = co2_meas.convert_co2_vals(temp_val)
+    def __init__(self,address=0x5A):
 
 
-            postable_dict = {'co2_air_qual':conv_value}
-            make_q.put(postable_dict)
+        Initializes the Co2 sensor and other parameters to be used. On my raspberry pi I got the i2c address of 0x5A. Hence I used this parameter,
 
-            print("converted CO2",conv_value)
-            
-            with open("readings2.txt",'a') as file:
-                my_str = "Co2 PPM: "+str(conv_value[0])+" ,VOC ppb: "+str(conv_value[1])
-                file.write(str(my_str)+"\n")
-            file.close()
-
-        except KeyboardInterrupt:
-            break
-
-        except:
-            co2_meas.init_co2_new()
-            time.sleep(0.2)
-
-    pass
-
-class measure_vocs():
-    def __init__(self):
-
-        return 
-
-    def init_co2_new(self):
+        
+        #CO2 sensor is default programmed to 0x5a on I2C bus.
+        self.addr = address
+        self.app_reg = 0xF4
+        self.reset_reg = 0xFF
+        self.meas_mode = 0x01
+        self.stat_reg = 0x00
+        self.co2_air_qual = None
 
 
-        #initalizes the smbus2 sensors mode
-        stat_reg = 0x00
-        addr = 0x5A
-        app_reg = 0xF4
-        reset_reg = 0xFF
 
+    def setup_co2_sensor(self):
+
+        
+
+        Method and means of initializing a carbon dioxide sensor.
+
+        
         print("Running Initializations")
 
         #Resetthe CO2 sensor
-        gp_bus.write_i2c_block_data(addr,reset_reg,[0x11,0xE5,0x72,0x8A])
+        gp_bus.write_i2c_block_data(self.addr,self.reset_reg,[0x11,0xE5,0x72,0x8A])
         time.sleep(0.3)
-
 
         #write to the status register
-        gp_bus.write_byte_data(addr,stat_reg,1)
-
-
-        meas_mode = 0x01
+        gp_bus.write_byte_data(self.addr,self.stat_reg,1)
 
         #Writing to application register
-        gp_bus.write_i2c_block_data(addr,app_reg, [])
+        gp_bus.write_i2c_block_data(self.addr,self.app_reg, [])
         time.sleep(0.3)
 
-        # print(int(bin_a, 2)) #Base 2(binary)
-        
-        # Set to 72 to increase sensor reading rate. See datasheet for justification. 
-        gp_bus.write_byte_data(addr,meas_mode,24)
+        # Set to 72 to increase sensor reading rate. See datasheet for justification.
+        gp_bus.write_byte_data(self.addr,self.meas_mode,24)
 
         # print("working")
         time.sleep(0.3)
-        
         print("Finished CO2 Initialization")
 
-
-    def read_co2_vals(self,i2c_addr):
-
-        #reads the eco2 parameters and VOC level
-        value_read = 0
-        # init_co2_new()
+        return
 
 
-        #set a time limit of 15 seconds for readings to be produced
-        read_duration = 15
+
+    def get_air_params(self):
+
+        
+
+        Function to update the self.co2_air_qual parameter
+
+        
+
+        #set a time limit of 12 seconds for readings to be produced
+        read_duration = 14
         curr_time = time.time()
         elapse_time = 0
+
         while elapse_time<read_duration:
-            print("enter while loop")
 
-            #deduce the current time passed see if data available. 
-
+            #deduce the current time passed see if data available.
             elapse_time = time.time()-curr_time
-            read_status = gp_bus.read_byte_data(i2c_addr,0x00)
+            # print("Oggles")
+
+            read_status = gp_bus.read_byte_data(self.addr,0x00)
+            # print("read_status",read_status)
+
             tmp = format(read_status,"#010b")[2:]
             time.sleep(0.5)
+            co2_air_qual = gp_bus.read_i2c_block_data(self.addr,0x02,4)
+            # print("debug ",co2_air_qual)
+            print("oops",co2_air_qual,tmp)
 
             #Control flow condition indicating that data is ready and avaialble
             if tmp[4]==str(1):
-                top_eco2 = gp_bus.read_i2c_block_data(i2c_addr,0x02,8)
-                print("Reading CO2 levels",top_eco2)
+                print("entering the condition")
+
+                co2_air_qual = gp_bus.read_i2c_block_data(self.addr,0x02,4)
+                # print("Reading CO2 & Air Quality Levels",co2_air_qual)
+
                 time.sleep(0.1)
-                value_read = 1
-                return top_eco2
+
+                #update the co2 parameter stored in class object.
+                self.co2_air_qual = co2_air_qual
+
+                #break and return
+                return co2_air_qual
+
         print("no data available")
 
-        return top_eco2
+        return None
 
-    def convert_co2_vals(self,co2_air_qual):
-            left_co2_val, right_co2_val = co2_air_qual[0],co2_air_qual[1]
+
+    def get_co2_vol_comp(self):
+        
+
+        Inputs (assuming no errors):
+        type(array) -> self.co2_arr_qual
+
+
+        Outputs (assuming no errors):
+        type(array) -> co2_level and voc_level corresponding to ppm of C02 detectable from atmosphere and volatile organic compounds.
+
+        Notes:
+        eco2 is in the first 2 bit fields of self.co2_air_qual.
+        Perform an LSL (logical shift left from IAC) to get the relevant param ppb
+
+        
+        #Try to process co2 data and send this. Error handling in class rather than multithread.
+        try:
+
+            #get value params
+            left_co2_val, right_co2_val = self.co2_air_qual[0],self.co2_air_qual[1]
 
             #gets the left_addr_val from CO2 sensor
             left_co2_val = left_co2_val<<8
@@ -719,7 +790,7 @@ class measure_vocs():
             co2_level = left_co2_val+right_co2_val
 
             #reads in a litle endian format.
-            left_voc, right_voc = co2_air_qual[2], co2_air_qual[3]
+            left_voc, right_voc = self.co2_air_qual[2], self.co2_air_qual[3]
 
             #gets the volatile organic copound level
             voc_level = (left_voc<<8)+right_voc
@@ -727,67 +798,13 @@ class measure_vocs():
             #returns the co2 and volatile organic compounds levels
             return [co2_level,voc_level]
 
+        except:
+            #error handling function
+            return None
 
 
-elapse_time = 0
-curr_time = time.time()
-arr_inspect = []
+#makes a queue where we can push data
 
-
-
-make_q = queue.Queue()
-
-lock = threading.Lock()
-
-
-#Simulate the CO2 and temperature sensors.
-# value_thread = threading.Thread(target=reading_to_queue,args=(make_q,lock),daemon=True)
-thread_co2 = threading.Thread(target=oops_new,args=(0x5A,),daemon=True)
-
-#Simulate the server by posting
-thread_post = post_to_server("my_test")
-
-#Simulate the GPIO CO2 sensor posting.
-# thread_co2 = read_slow_sensor("test_CO2")
-
-
-# value_thread.start()
-thread_post.start()
-thread_co2.start()
-
-print("---------Threads Initialized------------")
-curr_time = time.time()
-
-elapse_time = 0
-print("first elapse",elapse_time)
-
-'''
-while True:
-    if KeyboardInterrupt:
-        break
-    elapse_time = time.time()-curr_time
-'''
-
-# value_thread.join()
-# thread_post.join()
-
-# while elapse_time<15:
-
-# 	#Read Accelerometer raw value
-#     read_address = [0x3B,0x3D,0x3F]
-
-#     #deduce time elapsed
-#     elapse_time = time.time()-curr_time
-#     reading_to_queue(make_q)
-
-
-'''
-
-
-
-
-
-#puts value into the multithreaded target
 
 '''
 
