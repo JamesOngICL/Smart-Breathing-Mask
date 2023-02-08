@@ -1,1 +1,1 @@
-{'Sensor:temperaturereading': '25.502', 'address': 'MS3120001'}
+{'Sensor:accelerometerreading': '[-0.15673828125, 0.212158203125, 0.9453125]', 'address': 'MS3120001'}

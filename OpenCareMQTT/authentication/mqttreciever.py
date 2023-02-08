@@ -29,7 +29,7 @@ def calculate_bpm(data, buffer_size=20):
 
 def updatereadingmqtt(message):
       tmp = ast.literal_eval(message)
-      print(tmp)
+      print("tmp is: ", tmp)
       for i in tmp:
             n = i.split(":")
             if len(n)>1:
@@ -43,10 +43,13 @@ def updatereadingmqtt(message):
                               
                   elif n[1]=="accelerometerreading":
                         print("vals")
-                        print(float(tmp[i][0]))
-                        print(float(tmp[i][1]))
-                        print(float(tmp[i][2]))
-                        val = (float(tmp[i][0])**2 + float(tmp[i][1])**2 + float(tmp[i][2])**2)**0.5
+                        print(tmp[i])
+                        new_data = tmp[i][1:-2].split(",")
+                        
+                        print(float(new_data[0]))
+                        print(float(new_data[1]))
+                        print(float(new_data[2]))
+                        val = (float(new_data[0])**2 + float(new_data[1])**2 + float(new_data[2])**2)**0.5
                   extfunctions.updatereading(tmp["address"],n[1],val)
                   
 
@@ -55,7 +58,7 @@ def on_message(client, userdata, message):
 
       #Execute this upon recieving message
       file = open("mqttmessages.txt","w")
-      file.write(str(message.payload.decode("utf-8")))
+      file.write(str(message.payload.decode("utf-8")) + '\n')
       file.close()
       updatereadingmqtt(str(message.payload.decode("utf-8")))
 
