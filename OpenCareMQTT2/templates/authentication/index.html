@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+      .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+      }
+      .proxima-nova-bold {
+        font-family: proxima-nova, sans-serif;
+        font-weight: 700;
+        font-style: normal;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .container {
+        position: relative;
+        text-align: center;
+        color: white;
+        border-radius: 100px;
+      }
+      footer {
+        text-align: center;
+        padding: 3px;
+        background-color: #336699;
+        color: white;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <title>Authentication</title>
+  </head>
+  <body>
+  {% if user.is_authenticated %}
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a class="w3-bar-item w3-button" type="submit" href="/signout"><b>Open</b>Care</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right">
+        <a href="/profile" class="w3-bar-item w3-button" type="submit">Profile</a>
+        <a href="/yourdata" class="w3-bar-item w3-button" type="submit">Your Data</a>
+        <a href="/favorites" class="w3-bar-item w3-button" type="submit">News</a>
+        <a href="/search" class="w3-bar-item w3-button"><b>Search</b></a>
+      </div>
+    </div>
+  </div>
+  <body></body>
+  {% else %}
+  <!-- Navbar (sit on top) -->
+  <form method="post">
+    {% csrf_token %}
+  </form>
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+      <a href="#home" class="w3-bar-item w3-button"><b>Open</b>Care</a>
+      <!-- Float links to the right. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        <a href="#about" class="w3-bar-item w3-button">About</a>
+        <a class="w3-bar-item w3-button" href="/signin">Sign In</a>
+        <a class="w3-bar-item w3-button" href="/signup">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="w3-display-container w3-content w3-wide" style="max-width:1500px;" id="home">
+    {% load static %}
+    <img class="w3-image" src="{% static 'media/title2.jpg' %}" alt="Architecture" width="1500" height="800">
+    <div class="w3-display-middle w3-margin-top w3-center">
+      <h1 class="w3-xxlarge w3-text-white"><b>Open</b>Care</h1>
+    </div>
+  </header>
+
+  <!-- Page content -->
+  <div class="w3-content w3-padding" style="max-width:1564px">
+    <!-- About Section -->
+    <div class="w3-container w3-padding-32" id="about">
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16 w3-center"><b>About</b></h3>
+      <p class="w3-center">A platform for guardians and users to keep track of medical data using our different set of wearables.
+      </p>
+    </div>
+
+    <!-- What we support Section -->
+    <div class="w3-container w3-padding-64">
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/verify.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>Verify your identity</b></h3>
+        <p>Verify your identity as a guardian or user to start your journey.</p>
+      </div>
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/fundacc.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>Link your device</b></h3>
+        <p>Link your wearable with your account.</p>
+      </div>
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/condition.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>View your data</b></h3>
+        <p>View your data alongside additional AI generated comments.</p>
+      </div>
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/acceptorreject.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>Share your data</b></h3>
+        <p>Make your data available to the public or to a select few individuals.</p>
+      </div>
+      <div class="w3-col l2 m6 w3-margin-bottom" style="margin: 25px;">
+        <img src="{% static '/media/borrow.png' %}" style="margin-left: 70px; margin-right: 10px; width:25%">
+        <h3><b>View other's data</b></h3>
+        <p>Find publicly listed data or data shared with you. Shortlist them to keep track of your loved ones.</p>
+      </div>
+    </div>
+
+    <!-- Our Devices Section -->
+    <link href="https://use.typekit.net/emv3zbo.css" rel="stylesheet" crossorigin="anonymous">
+    <div class="w3-container w3-padding-32" id="about">
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16 w3-center"><b>Our Devices</b></h3>
+      <div class="container">
+        <img src="{% static 'media/smartmask.png' %}" alt="Snow" style="width:100%;">
+        <div class="proxima-nova-bold"><h3><b>It's time to find your rhythm. Introducing OpenCare Connect.</b></h3></div>
+      </div>
+      </p>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="w3-container w3-padding-32" id="contact">
+      <h3 class="w3-border-bottom w3-border-light-grey w3-padding-16"><b>Contact</b></h3>
+      <p>Contact us if you have any concerns.</p>
+      <form action="/action_page.php" target="_blank">
+        <input class="w3-input w3-border" type="text" placeholder="Name" required name="Name">
+        <input class="w3-input w3-section w3-border" type="text" placeholder="Email" required name="Email">
+        <input class="w3-input w3-section w3-border" type="text" placeholder="Subject" required name="Subject">
+        <input class="w3-input w3-section w3-border" type="text" placeholder="Comment" required name="Comment">
+        <button class="w3-button w3-black w3-section" type="submit">
+          <i class="fa fa-paper-plane"></i> SEND MESSAGE
+        </button>
+      </form>
+    </div>
+  <!-- Image of location/map -->
+  <div class="w3-container">
+    <img src="{% static 'media/stripeimage.png' %}" class="w3-image" style="width:10%">
+  </div>
+  <!-- End page content -->
+  </div>
+  <!-- Footer -->
+  <footer>
+    <p>Created at Imperial College London</p>
+  </footer>
+  {% endif %}
+  </body>
+</html>
