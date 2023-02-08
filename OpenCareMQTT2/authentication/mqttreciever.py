@@ -16,10 +16,13 @@ def updatereadingmqtt(message):
                         val = tmp[i]
                   elif n[1]=="accelerometerreading":
                         print("vals")
-                        print(float(tmp[i][0]))
-                        print(float(tmp[i][0]))
-                        print(float(tmp[i][0]))
-                        val = (float(tmp[i][0])**2 + float(tmp[i][1])**2 + float(tmp[i][2])**2)**0.5
+                        print(tmp[i])
+                        new_data = tmp[i][1:-2].split(",")
+                        
+                        print(float(new_data[0]))
+                        print(float(new_data[1]))
+                        print(float(new_data[2]))
+                        val = (float(new_data[0])**2 + float(new_data[1])**2 + float(new_data[2])**2)**0.5
                   elif n[1]=="co2reading":
                         val = tmp[i]
                   elif n[1]=="heartratereading":
@@ -27,16 +30,17 @@ def updatereadingmqtt(message):
                   extfunctions.updatereading(tmp["address"],n[1],val)
 
 def on_message(client, userdata, message):
-      print("received message: " ,str(message.payload.decode("utf-8")))
+      print("received message: " , str(message.payload.decode("utf-8")))
+
       #Execute this upon recieving message
       file = open("mqttmessages.txt","w")
-      file.write(str(message.payload.decode("utf-8")))
+      file.write(str(message.payload.decode("utf-8")) + '\n')
       file.close()
       updatereadingmqtt(str(message.payload.decode("utf-8")))
 
-mqttBroker ="test.mosquitto.org"
-client = mqtt.Client()
-client.connect(mqttBroker) 
-client.subscribe("IC.embedded/jomp/opencare")
+mqttBroker = "146.169.217.129" 
+client = mqtt.Client('webserver')
+client.connect(mqttBroker, port=1883) 
+client.subscribe("sensors/omar/readings")
 
-client.on_message=on_message 
+client.on_message=on_message
