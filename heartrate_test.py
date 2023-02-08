@@ -51,20 +51,6 @@ class MAX30102():
 
         return red_led, ir_led
 
-import requests
-import time
-
-URL = "http://192.168.0.17:8000"
-
 m = MAX30102()
 for i in range(100000):
-    client = requests.session()
-    client.get(URL)
-    if 'csrftoken' in client.cookies:
-        csrftoken = client.cookies['csrftoken']
-    else:
-        csrftoken = client.cookies['csrf']
- 
-    val = m.read_fifo()[1]%100000
-    data1 = {'Sensor:temperaturereading':str(val),'address':'MS3120001','csrfmiddlewaretoken':csrftoken}
-    r = client.post(URL,data=data1,headers=dict(Referer=URL))
+    print(m.read_fifo()[1])
