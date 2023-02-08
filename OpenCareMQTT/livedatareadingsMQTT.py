@@ -7,7 +7,7 @@ track = 0
 while(1):
     print("Sending...")
     client = mqtt.Client()
-    client.connect("localhost",port=1883)
+    client.connect("146.169.217.129",port=1883)
     y = 5*math.sin((track/10)*16*3.14)+25
     login_data = {'Sensor:temperaturereading':str(y),'address':'MS3120001'}
     MSG_INFO = client.publish("sensors/omar/temp", str(login_data))

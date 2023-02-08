@@ -37,9 +37,7 @@ def updatereadingmqtt(message):
                   val = ""
                   if n[1]=="temperaturereading":
                         val = tmp[i]
-                        bpm = calculate_bpm(val)
-                        extfunctions.updatereading(tmp["bpm"],n[1],val)
-                        
+                        # val = calculate_bpm(val)                        
                   elif n[1]=="heartratereading":
                         pass
                               
@@ -61,9 +59,9 @@ def on_message(client, userdata, message):
       file.close()
       updatereadingmqtt(str(message.payload.decode("utf-8")))
 
-mqttBroker ="localhost"
-client = mqtt.Client()
+mqttBroker = "146.169.217.129" #"146.169.217.129"
+client = mqtt.Client('webserver')
 client.connect(mqttBroker, port=1883) 
-client.subscribe("sensors/omar/temp")
+client.subscribe("sensors/omar/readings")
 
-client.on_message=on_message 
+client.on_message=on_message
