@@ -75,7 +75,7 @@
         line-height: 20px;
         list-style: none;
         margin: 0;
-        padding: 5px 12px;
+        padding: 10px 12px;
         text-align: center;
         transition: all 200ms;
         vertical-align: baseline;
@@ -97,8 +97,8 @@
       <!-- Float links to the right. Hide them on small screens -->
       <div class="w3-right">
         <a href="/profile" class="w3-bar-item w3-button" type="submit">Profile</a>
-        <a href="/yourdata" class="w3-bar-item w3-button">Your Data</a>
-        <a class="/favorites" type="submit">News</a>
+        <a href="/yourdata" class="w3-bar-item w3-button" type="submit">Your Data</a>
+        <a href="/favorites" class="w3-bar-item w3-button" type="submit">News</a>
         <a href="/search" class="w3-bar-item w3-button"><b>Search</b></a>
       </div>
     </div>
@@ -123,8 +123,6 @@
                   </div>
                   <div class="col-md-8">
                   <div class="card mb-3">
-                  <form method="post" action="/profileedit">
-                  {% csrf_token %}
                   <div class="card-body">
                         <div class="row">
                         <div class="col-sm-3">
@@ -143,47 +141,22 @@
                         {{oemail}}
                         </div>
                         </div>
-                        <div class="row">
-                        <div class="col-sm-12">
-                        </div>
-                        </div>
                         <hr>
                         <div class="row">
                         <div class="col-sm-3">
                         <h6 class="mb-0"><b>About Me</b></h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                        <textarea id="aboutme" name="aboutme" rows="4" cols="50">{{aboutme}}</textarea>
+                        {{aboutme}}
                         </div>
                         </div>
                         <hr>
-                        <div class="row">
-                        <div class="col-sm-3">
-                        <h6 class="mb-0"><b>Linked Devices</b></h6>
-                        </div>
-                        <div class="col-sm-9 text-secondary">
-                        <p id="demo"></p>
-                        <script>
-                          var devices = "{{devices}}";
-                          const devices1 = devices.split(",");
-                          let text = "";
-                          for (let i = 0; i < devices1.length - 1; i++) {
-                            text = text + devices1[i] + "  ";
-                            text = text + "<button name ='remove' class='button' type='submit' value='"+i+"''>remove</button>";
-                            text = text + "<br><br>"
-                          }
-                          document.getElementById("demo").innerHTML = text;
-                        </script>
-                        <div class="col-sm-3">
-                        <h6 class="mb-0"><b>Add Device</b></h6>
-                        </div>
-                        <input type="text" id="newdevice" name="newdevice">
-                        </div>
-                        </div>
-                        <br>
-                        <input type="submit" class="button" value="Save">
+                        <h6><b>Total Steps Today</b></h6>
+                        {{totsteps}}
+                        <hr>
+                        <h6><b>Total Calories Burnt Today</b></h6>
+                        {{estburn}}
                   </div>
-                  </form>
                   </div>
                   <div class="row gutters-sm">
                   </div>
@@ -195,7 +168,7 @@
   <!-- Navbar (sit on top) -->
   <div class="w3-top">
     <div class="w3-bar w3-white w3-wide w3-padding w3-card">
-      <a href="#home" class="w3-bar-item w3-button"><b>LOAN</b>Hub</a>
+      <a href="#home" class="w3-bar-item w3-button"><b>Open</b>Care</a>
       <!-- Float links to the right. Hide them on small screens -->
       <div class="w3-right w3-hide-small">
         <a href="#about" class="w3-bar-item w3-button">About</a>

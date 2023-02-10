@@ -30,7 +30,7 @@ def on_message(client, userdata, message):
       file.close()
       updatereadingmqtt(str(message.payload.decode("utf-8")))
 
-mqttBroker = "146.169.244.8" 
+mqttBroker = "146.169.248.182" 
 client = mqtt.Client('webserver')
 client.connect(mqttBroker, port=1883) 
 client.subscribe("sensors/omar/readings")

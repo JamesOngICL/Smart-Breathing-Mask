@@ -12,6 +12,12 @@ import random
 from django.http import JsonResponse
 
 # Create your views here.
+def username_exists(username):
+    if User.objects.filter(username=username).exists():
+        return True
+    
+    return False
+
 def chart(request):
       return render(request,"authentication/chart.html")
 
@@ -147,4 +153,19 @@ def favorites(request):
       return render(request, "authentication/favorites.html",{'aboutme':extfunctions.getabout(request.user.username)})
 
 def search(request):
-      return render(request, "authentication/search.html",{'aboutme':extfunctions.getabout(request.user.username)})
+      if request.method == "POST":
+            usernamequery = request.POST["search"]
+            if username_exists(usernamequery):
+                  user = User.objects.get(username = usernamequery)
+                  return render(request, "authentication/otherprofile.html",{'ousername':user.username,'ofirst_name':user.first_name,'olast_name':user.last_name,'oemail':user.email,'aboutme':extfunctions.getabout(user.username),'totsteps':totaldailysteps(user.username),'estburn':int(totaldailysteps(user.username)*0.04)})
+            else:
+                  print("not exists")
+            print(request.POST["search"])
+      return render(request, "authentication/search.html")
+
+def totaldailysteps(username):
+      devices = extfunctions.getdevices(username)
+      steps = []
+      for i in range(len(devices)):
+            steps.append(int(extfunctions.getreading(devices[i][0],"dailystep")))
+      return sum(steps)
