@@ -120,14 +120,16 @@
               <p id="demo"></p>
               <script>
                 var devices = "{{devices}}";
+                var steps = "{{steps}}";
                 const devices1 = devices.split(",");
+                const steps1 = steps.split(",");
                 let text = "";
                 let openformat = "<div class='col-md-4 mb-3'><div class='card'><div class='card-body'><div class='d-flex flex-column align-items-center text-center'><div class='mt-3'>";
                 let closeformat = "</div></div></div></div></div>";
                   for (let i = 0; i < devices1.length - 1; i++){
                   const code1 = devices1[i].split("(")[1];
                   const code2 = code1.split(")")[0];
-                  text = text + openformat + "<h4><b>" + devices1[i] + "<b><a class='btn btn-info '' href='/livechart/"+code2+"'><button class='button'>View Live Data</button></a></h4>" + closeformat;
+                  text = text + openformat + "<h4><b>" + devices1[i] + "<b><a class='btn btn-info '' href='/livechart/"+code2+"'><button class='button'>View Live Data</button></a></h4>" + "<br><h5>Your Steps Today: " + steps1[i] + "</h5>" + closeformat;
                 }
                 document.getElementById("demo").innerHTML = text;
               </script>

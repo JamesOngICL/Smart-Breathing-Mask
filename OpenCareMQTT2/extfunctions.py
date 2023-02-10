@@ -1,5 +1,6 @@
 import sqlite3
 import openai
+from datetime import date
 
 def getimage(username):
       "Return image in this function"
@@ -68,10 +69,6 @@ def getdevices(username):
       return devices
 
 def updatereading(device,column,value):
-      print("Testing")
-      print(device)
-      print(column)
-      print(value)
       data = sqlite3.connect("devicedata.sqlite3")
       cmd = data.cursor()
       device = "'"+device+"'"
@@ -130,3 +127,23 @@ def aiquery(query):
       response = completion.choices[0].text
       
       return response
+
+def updatesteps(device, latestgyroreading, threshold):
+      val = float(getreading(device,"accelerometerreading")) - 1
+      latestgyroreading = latestgyroreading - 1 
+      print("Step Test:")
+      print(val)
+      print(latestgyroreading)
+      if abs(val-latestgyroreading) > threshold and latestgyroreading*val<0:
+            print("here3")
+            print(int(str(date.today()).split("-")[2]))
+            print(getreading(device,"date"))
+            if int(str(date.today()).split("-")[2])==int(getreading(device,"date")):
+                  print("here1")
+                  currsteps = int(getreading(device,"dailystep"))
+                  updatereading(device,"dailystep",currsteps+2)
+            else:
+                  print("here2")
+                  updatereading(device,"dailystep",1)
+                  updatereading(device,"date",int(str(date.today()).split("-")[2]))
+                  

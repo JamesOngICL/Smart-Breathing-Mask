@@ -34,7 +34,6 @@ def fetch_values(request):
       data = {}
       for i in sensors:
             data[i] = extfunctions.getreading(request.GET["id"],i)
-      print(data)
       return JsonResponse(data)
 
 def home(request):
@@ -48,10 +47,6 @@ def home(request):
                         if n[1]=="temperaturereading":
                               val = tmp[i][0]
                         elif n[1]=="accelerometerreading":
-                              print("vals")
-                              print(float(tmp[i][0]))
-                              print(float(tmp[i][0]))
-                              print(float(tmp[i][0]))
                               val = (float(tmp[i][0])**2 + float(tmp[i][1])**2 + float(tmp[i][2])**2)**0.5
                         elif n[1]=="co2reading":
                               val = tmp[i][0]
@@ -120,7 +115,6 @@ def profileedit(request):
             tempdevices = tempdevices + devices[i][1] + ","
             devicelist.append(devices[i][0])
       if request.method == "POST":
-            print(request.POST)
             if "remove" in request.POST:
                   extfunctions.updatedevices("",devicelist[int(request.POST["remove"])])
             elif request.POST["newdevice"]!='':
@@ -141,11 +135,13 @@ def signout(request):
 
 def yourdata(request):
       devices = extfunctions.getdevices(request.user.username)
+      steps = ""
       tempdevices = ""
       for i in range(len(devices)):
             tempdevices = tempdevices + devices[i][1]+" ("+devices[i][0]+")"+","
+            steps = steps + extfunctions.getreading(devices[i][0],"dailystep") + ","
       about = extfunctions.getabout(request.user.username)
-      return render(request, "authentication/yourdata.html",{'aboutme':extfunctions.getabout(request.user.username),'devices':tempdevices,'aiquery':extfunctions.aiquery(about)})
+      return render(request, "authentication/yourdata.html",{'aboutme':extfunctions.getabout(request.user.username),'devices':tempdevices,'aiquery':extfunctions.aiquery(about),'steps':steps})
 
 def favorites(request):
       return render(request, "authentication/favorites.html",{'aboutme':extfunctions.getabout(request.user.username)})

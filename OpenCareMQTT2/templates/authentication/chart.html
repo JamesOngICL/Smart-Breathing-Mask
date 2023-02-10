@@ -46,7 +46,7 @@
         },
         data: {
           datasets: [{
-            data: [50,50],
+            data: [10,50],
             backgroundColor: [
               'rgb(255, 255, 255)',
               'rgb(0, 255, 128)'
@@ -123,8 +123,8 @@
             }],
             yAxes: [{
               ticks:{
-                max: 40,
-                min: 0
+                max: 30,
+                min: 20
               }
             }]
           },
@@ -246,10 +246,6 @@
             }   
             }],
             yAxes: [{
-              ticks:{
-                max: 35,
-                min: 20
-              }
             }]
           },
           elements: {
@@ -259,6 +255,9 @@
           }
         })
       });
+      function score(opt, curr){
+        return [100*(Math.abs(parseInt(curr)-opt)/opt),100-100*(Math.abs(parseInt(curr)-opt)/opt)]
+      }
       function addData(data) {
         if(data){
 
@@ -275,6 +274,10 @@
 
           mAccelChartInstance.data.labels.push(new Date());
           mAccelChartInstance.data.datasets.forEach((dataset) =>{dataset.data.push(data['mA'])});
+
+          chartgaugehr.data.datasets[0].data = score(50,data["hr"]);
+          chartgaugetemp.data.datasets[0].data = score(23,data["xA"]);
+          chartgaugeco2.data.datasets[0].data = score(600,data["mA"]);
 
           if(updateCount > numberElements){
 
@@ -296,6 +299,10 @@
           yAccelChartInstance.update();
           zAccelChartInstance.update();
           mAccelChartInstance.update();
+          chartgaugeco2.update();
+          chartgaugehr.update();
+          chartgaugetemp.update();
+
         }
       };
 
@@ -303,22 +310,27 @@
       var filter = [0,0.0024020332548697417, 0.005842766831189515, 0.01271754116880599, 0.024770387852997698, 0.043172531888630586, 0.06733289518468631, 0.09397062513676754, 0.11735510892143318, 0.13114657203397997, 0.13114657203397997, 0.11735510892143318, 0.09397062513676754, 0.06733289518468631, 0.043172531888630586, 0.024770387852997698, 0.01271754116880599, 0.005842766831189515, 0.0024020332548697417, 0.0008836586514767013,0];
       var prevval1 = new Array(21);
       var prevval2 = new Array(21);
+      var prevval3 = new Array(21);
       
-      function pusharr(data1,data2){
+      function pusharr(data1,data2,data3){
         prevval1.shift();
         prevval1[20]=data1;
         prevval2.shift();
         prevval2[20]=data2;
+        prevval3.shift();
+        prevval3[20]=data3;
       }
       function filt(){
         //1d gaussian k = 3, sigma = 3, kernal size = 19
         totsum1 = 0;
         totsum2 = 0;
+        totsum3 = 0;
         for(let i = 0; i < prevval1.length; i++){
           totsum1 = totsum1 + parseFloat(prevval1[i])*filter[i];
           totsum2 = totsum2 + parseFloat(prevval2[i])*filter[i];
+          totsum3 = totsum3 + parseFloat(prevval3[i])*filter[i];
         }
-        return [totsum1, totsum2];
+        return [totsum1, totsum2, totsum3];
       }
       function mean(arr){
         tot = 0;
@@ -331,7 +343,7 @@
 
       //Heart Rate Calculation//
       var prevrawval = new Array(21);
-      var prevfiltval = new Array(250);
+      var prevfiltval = new Array(100);
       var prevhr = new Array(10);
 
       function pushhr(data){
@@ -346,7 +358,7 @@
         }
 
         prevfiltval.shift();
-        prevfiltval[249]=totsum;
+        prevfiltval[99]=totsum;
 
         return totsum;
       }
@@ -358,8 +370,10 @@
             peak = peak + 1;
           }
         }
-        prevhr.shift();
-        prevhr[9] = peak*6;
+        if(peak*15>40){
+          prevhr.shift();
+          prevhr[9] = peak*15;
+        }
         console.log(mean(prevhr));
         return mean(prevhr);
       }
@@ -381,7 +395,7 @@
           },
           success: function(data){
             console.log("Update Data");
-            pusharr(data['temperaturereading'],data['accelerometerreading']-1);
+            pusharr(data['temperaturereading'],data['accelerometerreading']-1,data['co2reading']);
             pushhr(data['heartratereading']);
             const val = filt();
             const hr = filthr();
@@ -405,7 +419,7 @@
             }
 
             //Add Data to Charts
-            addData({'xA':val[0],'yA':val[1],'xAcolor':"gray",'zA':hr,'mA':data['co2reading'],'hr':bpm});
+            addData({'xA':val[0],'yA':val[1],'xAcolor':"gray",'zA':hr,'mA':val[2],'hr':bpm});
 
           },
           error: function(){

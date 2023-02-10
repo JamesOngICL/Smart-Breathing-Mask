@@ -1,1 +1,1 @@
-{'Sensor:heartratereading': '29.71859984957746', 'address': 'MS3120001'}
+{'Sensor:accelerometerreading': '[-0.17041015625, 0.03564453125, 0.958984375]', 'address': 'MS3120001'}
