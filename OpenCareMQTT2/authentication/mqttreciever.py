@@ -7,12 +7,10 @@ import socket
 import rsa
 import binascii
 
-publicKey, privateKey = rsa.newkeys(2048)
-
 def updatereadingmqtt(message):
       #Decrypt First
       message = binascii.unhexlify(message.encode())
-      message = rsa.decrypt(message,privateKey).decode()
+      message = rsa.decrypt(message,extfunctions.getkey()).decode()
       
       tmp = ast.literal_eval(message)
       for i in tmp:
@@ -34,6 +32,7 @@ def updatereadingmqtt(message):
 
 def on_message(client, userdata, message):
       #Execute this upon recieving message
+      print("recieved")
       updatereadingmqtt(message.payload.decode("utf-8"))
 
 #Get IP automatically
@@ -42,7 +41,7 @@ s.connect(("8.8.8.8", 80))
 ip = s.getsockname()[0]
 
 mqttBroker = ip 
-client = mqtt.Client('webserver')
+client = mqtt.Client()
 client.connect(mqttBroker, port=1883) 
 client.subscribe("sensors/omar/readings")
 

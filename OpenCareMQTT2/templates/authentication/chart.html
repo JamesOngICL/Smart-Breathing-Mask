@@ -279,6 +279,7 @@
           
           yAccelChartInstance.data.labels.push(new Date());
           yAccelChartInstance.data.datasets.forEach((dataset) =>{dataset.data.push(data['yA'])});
+          yAccelChartInstance.options.title.text = ["Acceleration Magnitude (m/s²)","Detected State: "+data["state"]];
 
           zAccelChartInstance.data.labels.push(new Date());
           zAccelChartInstance.data.datasets.forEach((dataset) =>{dataset.data.push(data['zA'])});
@@ -351,6 +352,13 @@
         }
         return tot/arr.length;
       }
+      function absmean(arr){
+        tot = 0;
+        for(let i=0; i < arr.length; i++){
+          tot = tot + (arr[i]**2)**0.5;
+        }
+        return tot/arr.length;
+      }
       //--------------------//
 
       //Heart Rate Calculation//
@@ -397,13 +405,20 @@
         addData({'xA':val});
         setTimeout(updateData,updateInterval);
       }	
+
+      var prevhr1;
+      var prevcondition;
+
       function updateChart() {
         $.ajax({
           type:"GET",
           datatype: 'json',
           url: "{% url 'opencare:getdata' %}",
           data: {
-            'id': "{{id}}"
+            'id': "{{id}}",
+            'hr': prevhr1,
+            'energylevel': absmean(prevval2)*100,
+            'prevcondition': prevcondition
           },
           success: function(data){
             console.log("Update Data");
@@ -424,14 +439,32 @@
             //Calc HR
             var bpm;
             if(hr < 10000){
-              bpm = "NaN"
+              bpm = 'NaN';
             }
             else{
               bpm = calchr();
             }
+            prevhr1 = bpm;
 
+            //Condition Detection
+            console.log("ML");
+            console.log(data["condition"]);
+            var condition = "Loading";
+            if(data["condition"]==2){
+              condition = "Resting";
+            }
+            else if(data["condition"]==3){
+              condition = "Walking";
+            }
+            else if(data["condition"]==4){
+              condition = "Running";
+            }
+            else{
+              condition = prevcondition;
+            }
+            prevcondition = condition;
             //Add Data to Charts
-            addData({'xA':val[0],'yA':val[1],'xAcolor':"gray",'zA':hr,'mA':val[2],'hr':bpm});
+            addData({'xA':val[0],'yA':val[1],'xAcolor':"gray",'zA':hr,'mA':val[2],'hr':bpm, 'state':condition});
 
           },
           error: function(){

@@ -19,4 +19,6 @@ def main():
 
 
 if __name__ == '__main__':
+    from authentication.machinelearningmodel import DTree
+    import numpy
     main()
