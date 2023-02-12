@@ -10,8 +10,9 @@ import sqlite3
 import authentication
 import random
 from django.http import JsonResponse
+import rsa
+from authentication import mqttreciever
 
-# Create your views here.
 def username_exists(username):
     if User.objects.filter(username=username).exists():
         return True
@@ -41,6 +42,9 @@ def fetch_values(request):
       for i in sensors:
             data[i] = extfunctions.getreading(request.GET["id"],i)
       return JsonResponse(data)
+
+def keyreq(request):
+      return JsonResponse({'key':str(mqttreciever.publicKey)})
 
 def home(request):
       if request.method == "POST":
@@ -150,7 +154,7 @@ def yourdata(request):
       return render(request, "authentication/yourdata.html",{'aboutme':extfunctions.getabout(request.user.username),'devices':tempdevices,'aiquery':extfunctions.aiquery(about),'steps':steps})
 
 def favorites(request):
-      return render(request, "authentication/favorites.html",{'aboutme':extfunctions.getabout(request.user.username)})
+      return render(request, "authentication/favorites.html")
 
 def search(request):
       if request.method == "POST":
@@ -169,3 +173,10 @@ def totaldailysteps(username):
       for i in range(len(devices)):
             steps.append(int(extfunctions.getreading(devices[i][0],"dailystep")))
       return sum(steps)
+
+def leaderboard(request):
+      raw = extfunctions.leaderboard()
+      data = ""
+      for i in range(len(raw)):
+            data = data + str(i+1) + ";" + str(raw[i][0]) + ";" + str(raw[i][1]) + ";" + str(int(int(raw[i][1])*0.04)) + ","
+      return render(request, "authentication/leaderboard.html",{"data":data})

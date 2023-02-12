@@ -17,5 +17,7 @@ urlpatterns = [
     path('search', views.search, name="search"),
     path('chart',views.chart, name="chart"),
     path('getdata',views.fetch_values, name="getdata"),
-    path('livechart/<id>',views.livechart, name="livechart")
+    path('livechart/<id>',views.livechart, name="livechart"),
+    path('leaderboard',views.leaderboard, name="leaderboard"),
+    path('keyreq',views.keyreq, name="publickey")
 ]

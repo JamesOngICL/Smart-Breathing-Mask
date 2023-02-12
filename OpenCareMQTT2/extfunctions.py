@@ -35,10 +35,7 @@ def getabout(username):
 def updateabout(username,aboutme):
       data = sqlite3.connect("data.sqlite3")
       cmd = data.cursor()
-      aboutme = "'"+aboutme+"'"
-      username = "'"+username+"'"
-      cmd1 = """UPDATE aboutme SET about="""+aboutme+""" WHERE username="""+username+";"
-      cmd.execute("""UPDATE aboutme SET about="""+aboutme+""" WHERE username="""+username+";")
+      cmd.execute("UPDATE aboutme SET about = ? WHERE username = ?", (aboutme,username))
       data.commit()
       data.close()
       
@@ -146,4 +143,23 @@ def updatesteps(device, latestgyroreading, threshold):
                   print("here2")
                   updatereading(device,"dailystep",1)
                   updatereading(device,"date",int(str(date.today()).split("-")[2]))
+                  
+def leaderboard():
+      data = sqlite3.connect("devicedata.sqlite3")
+      cmd = data.cursor()
+      devices = cmd.execute("""SELECT username,dailystep FROM devicelist""")
+      readings = devices.fetchall()       
+      data.close()
+      dict1 = {}
+      for i in range(len(readings)):
+           if readings[i][0] is not None and len(readings[i][0])>0:
+                 if readings[i][0] in dict1:
+                       dict1[readings[i][0]]=dict1[readings[i][0]]+int(readings[i][1])
+                 else:
+                       dict1[readings[i][0]]=int(readings[i][1])
+      sort = sorted(dict1.items(), key=lambda x: x[1], reverse=True)
+      return sort
+
+print(leaderboard())
+
                   

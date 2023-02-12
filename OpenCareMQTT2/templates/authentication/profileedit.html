@@ -97,8 +97,9 @@
       <!-- Float links to the right. Hide them on small screens -->
       <div class="w3-right">
         <a href="/profile" class="w3-bar-item w3-button" type="submit">Profile</a>
-        <a href="/yourdata" class="w3-bar-item w3-button">Your Data</a>
-        <a class="/favorites" type="submit">News</a>
+        <a href="/yourdata" class="w3-bar-item w3-button" type="submit">Your Data</a>
+        <a href="/favorites" class="w3-bar-item w3-button" type="submit">News</a>
+        <a href="/leaderboard" class="w3-bar-item w3-button" type="submit">Daily Tops</a>
         <a href="/search" class="w3-bar-item w3-button"><b>Search</b></a>
       </div>
     </div>
@@ -113,7 +114,7 @@
                         <div class="d-flex flex-column align-items-center text-center">
                         <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Admin" class="rounded-circle" width="150">
                         <div class="mt-3">
-                        <h4>{{ousername}}</h4>
+                        <h4>{{user.username}}</h4>
                         </div>
                         </div>
                   </div>
@@ -131,7 +132,7 @@
                         <h6 class="mb-0"><b>Full Name</b></h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                        {{ofirst_name}} {{olast_name}}
+                        {{user.first_name}} {{user.last_name}}
                         </div>
                         </div>
                         <hr>
@@ -140,7 +141,7 @@
                         <h6 class="mb-0"><b>Email</b></h6>
                         </div>
                         <div class="col-sm-9 text-secondary">
-                        {{oemail}}
+                        {{user.email}}
                         </div>
                         </div>
                         <div class="row">

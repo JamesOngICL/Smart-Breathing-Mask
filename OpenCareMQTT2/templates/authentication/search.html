@@ -34,7 +34,7 @@
         display: flex;
       }
       body {
-        background: #f1f1f1;
+        background: #ffffff;
         height: 100vh;
       }
       .search-bar input,
@@ -105,14 +105,14 @@
       }
       .search-btn:before {
         border-radius: 50%;
-        box-shadow: 0 0 0 0.2em #f1f1f1 inset;
+        box-shadow: 0 0 0 0.2em #ffffff inset;
         top: 0.75em;
         left: 0.75em;
         width: 1.2em;
         height: 1.2em;
       }
       .search-btn:after {
-        background: #f1f1f1;
+        background: #ffffff;
         border-radius: 0 0.25em 0.25em 0;
         top: 51%;
         left: 51%;
@@ -131,7 +131,7 @@
       /* Active state */
       .search-bar input:focus + .search-btn,
       .search-bar input:valid + .search-btn {
-        background: #2762f3;
+        background: #000000;
         border-radius: 0 0.375em 0.375em 0;
         transform: scale(1);
       }
@@ -144,7 +144,7 @@
       .search-bar input:focus + .search-btn:hover,
       .search-bar input:valid + .search-btn:hover,
       .search-bar input:valid:not(:focus) + .search-btn:focus {
-        background: #0c48db;
+        background: #c1c1c1;
       }
       .search-bar input:focus + .search-btn:active,
       .search-bar input:valid + .search-btn:active {
@@ -153,13 +153,13 @@
 
       @media screen and (prefers-color-scheme: dark) {
         body, input {
-          color: #f1f1f1;
+          color: #ffffff;
         }
         body {
           background: #171717;
         }
         .search-bar input {
-          box-shadow: 0 0 0 0.4em #f1f1f1 inset;
+          box-shadow: 0 0 0 0.4em #ffffff inset;
         }
         .search-bar input:focus,
         .search-bar input:valid {
@@ -167,7 +167,7 @@
           box-shadow: 0 0 0 0.1em #3d3d3d inset;
         }
         .search-btn {
-          background: #f1f1f1;
+          background: #ffffff;
         }
       }
     </style>
@@ -185,6 +185,7 @@
             <a href="/profile" class="w3-bar-item w3-button" type="submit">Profile</a>
             <a href="/yourdata" class="w3-bar-item w3-button" type="submit">Your Data</a>
             <a href="/favorites" class="w3-bar-item w3-button" type="submit">News</a>
+            <a href="/leaderboard" class="w3-bar-item w3-button" type="submit">Daily Tops</a>
             <a href="/search" class="w3-bar-item w3-button"><b>Search</b></a>
       </div>
     </div>

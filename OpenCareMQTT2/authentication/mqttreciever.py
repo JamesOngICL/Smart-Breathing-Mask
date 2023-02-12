@@ -3,6 +3,10 @@ import paho.mqtt.client as mqtt
 import time
 import extfunctions
 import ast
+import socket
+import rsa
+
+publicKey, privateKey = rsa.newkeys(512)
 
 def updatereadingmqtt(message):
       tmp = ast.literal_eval(message)
@@ -30,7 +34,12 @@ def on_message(client, userdata, message):
       file.close()
       updatereadingmqtt(str(message.payload.decode("utf-8")))
 
-mqttBroker = "146.169.248.182" 
+#Get IP automatically
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+ip = s.getsockname()[0]
+
+mqttBroker = ip 
 client = mqtt.Client('webserver')
 client.connect(mqttBroker, port=1883) 
 client.subscribe("sensors/omar/readings")

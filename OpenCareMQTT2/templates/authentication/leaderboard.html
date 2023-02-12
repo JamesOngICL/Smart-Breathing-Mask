@@ -14,31 +14,26 @@
         margin-right: auto;
         width: 50%;
       }
-      .column {
-        float: left;
-        width: 33%;
-        padding: 10px;
-      }
-      .column2 {
-        float: left;
-        width: 20%;
-        padding: 10px;
-      }
-      .row {
-        content: "";
-        clear: both;
-        display: table;
-        margin-left: auto;
-        margin-right: auto;
+      table {
         width: 80%;
+        margin: 0 auto;
+        text-align: center;
+        border-collapse: collapse;
+        padding: 0px 20px;
       }
-      .row2 {
-        content: "";
-        clear: both;
-        display: table;
-        margin-left: auto;
-        margin-right: auto;
-        width: 50%;
+      th, td {
+        border: 1px solid #ffffff;
+        padding: 8px;
+      }
+      th {
+        background-color: #ffffff;
+        font-size: 18px;
+      }
+      td {
+        font-size: 16px;
+      }
+      tr:nth-child(even) {
+        background-color: #ffffff;
       }
     </style>
 
@@ -61,48 +56,22 @@
     </div>
   </div>
   <br><br><br><br>
-  <body>
-    <div class="row">
-      {% load static %}
-      <div class="column">
-        <img src="{% static 'media/newsletter1.png' %}" alt="Snow" style="width:100%;">
-        <center><p style="color:rgb(20, 90, 150)">Anticipate sicknesses with a medical checkup.</p></center>
-      </div>
-      <div class="column">
-        <img src="{% static 'media/newsletter2.png' %}" alt="Forest" style="width:100%">
-        <center><p style="color:rgb(20, 90, 150)">Constant stomach aches, a sign of hemorrhoids or colon cancer?</p></center>
-      </div>
-      <div class="column">
-        <img src="{% static 'media/newsletter3.png' %}" alt="Mountains" style="width:100%">
-        <center><p style="color:rgb(20, 90, 150)">Keep up with the latest treatments for spinal pain.</p></center>
-      </div>
-    </div>
-    <hr>
-    <center><h3><b>Latest Articles</b></h3></center>
-    <div class="row2">
-      {% load static %}
-      <div class="column2">
-        <img src="{% static 'media/newsletter4.png' %}" alt="Snow" style="width:100%;">
-        <center><p style="color:rgb(20, 90, 150)">Top tips for headaches.</p></center>
-      </div>
-      <div class="column2">
-        <img src="{% static 'media/newsletter5.png' %}" alt="Forest" style="width:100%">
-        <center><p style="color:rgb(20, 90, 150)">Closest clinics around London.</p></center>
-      </div>
-      <div class="column2">
-        <img src="{% static 'media/newsletter6.png' %}" alt="Mountains" style="width:100%">
-        <center><p style="color:rgb(20, 90, 150)">Treatments for asthma in children.</p></center>
-      </div>
-      <div class="column2">
-        <img src="{% static 'media/newsletter7.png' %}" alt="Forest" style="width:100%">
-        <center><p style="color:rgb(20, 90, 150)">Discount sunday clinics available near you.</p></center>
-      </div>
-      <div class="column2">
-        <img src="{% static 'media/newsletter8.png' %}" alt="Mountains" style="width:100%">
-        <center><p style="color:rgb(20, 90, 150)">Is it safe to travel by plane when pregnant?</p></center>
-      </div>
-    </div>
-    <hr>
+      <div id="demo"></div>
+      <script>
+        var data = "{{data}}";
+        const devices1 = data.split(",");
+        let text = "<table><tr><th>Rank</th><th>Name</th><th>Steps</th><th>Calories Burnt</th></tr>";
+        for (let i = 0; i < devices1.length - 1; i++) {
+          const temp = devices1[i].split(";");
+          text = text + "<tr>" + "<td>" + temp[0] + "</td>" + "<td>" + temp[1] + "</td>" + "<td>" + temp[2] + "</td>" + "<td>" + temp[3] + "</td>" + "</tr>";
+        }
+        console.log(text+"</table>");
+        document.getElementById("demo").innerHTML = text;
+      </script>
+  </table>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   </body>
   {% else %}
   <!-- Navbar (sit on top) -->
