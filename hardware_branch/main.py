@@ -119,12 +119,19 @@ def thread_to_server(thread_name):
     return
 
 def getkey():
+    '''
+    Function that will generate a public key necessary for posting to MQTT.
+    '''
     public_key = rsa.PublicKey(17822536325291103101323819498187309223540366914795284790480275832907387155167793075777561150522889142593001669196266128814411559496746832319118549807122213726549864914547111915612810151458421841885576703978191424830064979840625261982526983948534265579315189645712708057829444744526097651478257973249834256433525747544157305555064689911278584472322809386995238704397789909958860784202773540915843232935732240372781175094908655965143500697948600899964661078620371137797175431929993230441845012688184755850715508366128027618816784376158765529688868977572400965001046656964586523083679277864216337830024186581266532501199, 65537)
     return public_key
 
 def encrypt(message,key):
+    """"
+    Protocol to encrypt the relevant message information and the information can be sent to the server. 
+    """
     return binascii.hexlify(rsa.encrypt(message.encode(),key)).decode()
-    
+
+#gets the public postable key. 
 key = getkey()
 
 
@@ -199,6 +206,11 @@ def reading_to_queue(make_q,lock):
 
 
 def co2_to_queue(addr,make_q):
+    '''
+    
+    Calls the CO2 class in a thread initalized later and will send data to the shared queue resource.  
+    
+    '''
 
     co2_meas = co2_vals.measure_vocs()
 
@@ -231,7 +243,7 @@ def read_heart_rate(make_q):
 
     '''
 
-    m = heart.MAX30102()
+    m = heart.heart_sensor()
 
     while True:
         try:
