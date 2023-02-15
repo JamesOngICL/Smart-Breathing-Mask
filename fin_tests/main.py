@@ -231,7 +231,7 @@ def read_heart_rate(make_q):
 
     '''
 
-    m = heart.MAX30102()
+    m = heart.heart_sensor()
 
     while True:
         try:
