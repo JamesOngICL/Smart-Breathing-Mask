@@ -1,0 +1,4 @@
+paho_mqtt==1.6.1
+rsa==4.9
+smbus==1.1.post2
+smbus2==0.4.2
