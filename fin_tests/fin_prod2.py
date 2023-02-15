@@ -1,4 +1,3 @@
-
 import smbus2					
 from time import sleep          
 import json
@@ -12,7 +11,6 @@ import RPi.GPIO as GPIO
 import smbus
 import random
 import rsa
-import binascii
 
 import temperature as temp_sens
 import gyro_acc, co2_vals, heart
@@ -30,6 +28,7 @@ make_q = queue.Queue()
 #Lock if thread cannnot be 
 lock = threading.Lock()
 
+#initialize a key
 
 class post_to_server(threading.Thread):
     def __init__(self,name):
@@ -84,13 +83,10 @@ def thread_to_server(thread_name):
         except queue.Empty:            
             continue
 
-        except:
-            time.sleep(0.05)
-
         else:
 
             client = mqtt.Client('raspberry_pi_test')
-            client.connect("146.169.253.62",port=1883)
+            client.connect("146.169.254.200",port=1883)
             
             if 'Temperature' in get_q_val:
                 # print("preposting",get_q_val['Temperature'])
@@ -109,23 +105,20 @@ def thread_to_server(thread_name):
             else:
                 continue
 
+            # reading_data = {'Sensor:temperaturereading':str(get_q_val),'address':'MS3120001'}
             MSG_INFO = client.publish("sensors/omar/readings", encrypt(str(reading_data),key))
             print("Currently Sending:",reading_data)
             mqtt.error_string(MSG_INFO.rc)
-            time.sleep(0.01)
             # print("Message Published: ", MSG_INFO.is_published())
+        
+        finally:
+            #this is the server thread hence there doesn't need to be random number generation. 
+            time.sleep(0.03)
+            continue
+
 
 
     return
-
-def getkey():
-    public_key = rsa.PublicKey(17822536325291103101323819498187309223540366914795284790480275832907387155167793075777561150522889142593001669196266128814411559496746832319118549807122213726549864914547111915612810151458421841885576703978191424830064979840625261982526983948534265579315189645712708057829444744526097651478257973249834256433525747544157305555064689911278584472322809386995238704397789909958860784202773540915843232935732240372781175094908655965143500697948600899964661078620371137797175431929993230441845012688184755850715508366128027618816784376158765529688868977572400965001046656964586523083679277864216337830024186581266532501199, 65537)
-    return public_key
-
-def encrypt(message,key):
-    return binascii.hexlify(rsa.encrypt(message.encode(),key)).decode()
-    
-key = getkey()
 
 
 
@@ -138,22 +131,15 @@ def process_vals(mode):
     '''
 
     #get accelerometer vectorized readings
-    if mode =="temp":
-        #inits sensor
-        init_temp = temp_sens.temp_hum_sensor()
-        
-        #gets temperature readings after initializing sensor
-        get_temp = init_temp.read_temp_hum('temp')
-
-        return get_temp
-
+    #inits sensor
+    init_temp = temp_sens.temp_hum_sensor()
     
-    elif mode=="acc":
-        read_address = [0x3B,0x3D,0x3F]
-        init_acc = gyro_acc.gyro_accelerometer_sensor()
-        init_acc.initialize_accelerometer()
-        Ax, Ay, Az = init_acc.process_accelerometer_vals(read_address)
-        return Ax,Ay,Az
+    #gets temperature readings after initializing sensor
+    get_temp = init_temp.read_temp_hum('temp')
+
+    return get_temp
+
+
 
 
 def reading_to_queue(make_q,lock):
@@ -163,22 +149,12 @@ def reading_to_queue(make_q,lock):
 
         while True:
             try:
-                #get value for acceleration
-                Ax,Ay,Az = process_vals("acc")
-                postable_dict = {'Accelerometer':[Ax,Ay,Az]}
-                
-                #put data values in queue
-                make_q.put(postable_dict)
-                
-
-                sleep(0.018)
-
                 #get temperature readings vectorized
                 get_temp = process_vals("temp")
                 postable_dict = {'Temperature':get_temp}
                 make_q.put(postable_dict)
 
-                print("Temp:",get_temp,"Ax:",Ax," Ay:",Ay)
+                # print("Temp:",get_temp)
 
                 sleep(0.018)
 
@@ -220,7 +196,8 @@ def co2_to_queue(addr,make_q):
 
         except:
             co2_meas.init_co2_new()
-            time.sleep(0.2)
+            gen_rand_co2 = (random.randint(10,100))/100
+            time.sleep(gen_rand_co2)
 
     pass
 
@@ -231,7 +208,7 @@ def read_heart_rate(make_q):
 
     '''
 
-    m = heart.MAX30102()
+    m = heart.heart_sensor()
 
     while True:
         try:
@@ -252,10 +229,21 @@ def read_heart_rate(make_q):
             new_rand = (random.randint(6,60))/100
             time.sleep(new_rand)
 
+def getkey():
+    public_key = rsa.PublicKey(17822536325291103101323819498187309223540366914795284790480275832907387155167793075777561150522889142593001669196266128814411559496746832319118549807122213726549864914547111915612810151458421841885576703978191424830064979840625261982526983948534265579315189645712708057829444744526097651478257973249834256433525747544157305555064689911278584472322809386995238704397789909958860784202773540915843232935732240372781175094908655965143500697948600899964661078620371137797175431929993230441845012688184755850715508366128027618816784376158765529688868977572400965001046656964586523083679277864216337830024186581266532501199, 65537)
+    return public_key
+
+def encrypt(message,key):
+    return binascii.hexlify(rsa.encrypt(message.encode(),key)).decode()
+    
+
+key = getkey()
+
+
 def run_threads():
     #Run the Threads. 
     value_thread = threading.Thread(target=reading_to_queue,args=(make_q,lock),daemon=True)
-    thread_co2 = threading.Thread(target=co2_to_queue,args=(0x5A,make_q),daemon=True)
+    # thread_co2 = threading.Thread(target=co2_to_queue,args=(0x5A,make_q),daemon=True)
     thread_heart_rate = threading.Thread(target=read_heart_rate, args=(make_q,),daemon=True)
     thread_post = post_to_server("Server_Thread")
     
@@ -264,7 +252,7 @@ def run_threads():
 
     value_thread.start()
     thread_post.start()
-    thread_co2.start()
+    # thread_co2.start()
     thread_heart_rate.start()
 
     pass
@@ -272,4 +260,3 @@ def run_threads():
 if __name__=="__main__":
     print("----Running the website----")
     run_threads()
-

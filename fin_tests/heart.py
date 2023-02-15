@@ -12,7 +12,7 @@ import smbus
 
 import threading_almost_fin as th
 
-class MAX30102():
+class heart_sensor():
     def __init__(self):
 
         print("Initialized Heart Rate Sensor")
