@@ -163,7 +163,14 @@ def process_vals(mode):
         return Ax,Ay,Az
 
 
-def reading_to_queue(make_q,lock):
+def get_temp_acc(make_q,lock):
+    
+    '''
+    
+    Runs a function to get and extract the raw temperature and acceleration values and place 
+    them within a queue data structure. 
+    
+    '''
 
     try:
         print("Posting values")
@@ -265,15 +272,21 @@ def read_heart_rate(make_q):
             time.sleep(new_rand)
 
 def run_threads():
-    #Run the Threads. 
-    value_thread = threading.Thread(target=reading_to_queue,args=(make_q,lock),daemon=True)
+    '''
+    
+    Calling this function will result in all 4 threads being triggered and running on the main thread. 
+    
+    ''' 
+    
+    #Name and intialize the threads
+    value_thread = threading.Thread(target=get_temp_acc,args=(make_q,lock),daemon=True)
     thread_co2 = threading.Thread(target=co2_to_queue,args=(0x5A,make_q),daemon=True)
     thread_heart_rate = threading.Thread(target=read_heart_rate, args=(make_q,),daemon=True)
     thread_post = post_to_server("Server_Thread")
     
     print("---------Threads Initialized------------")   
 
-
+    #Runs the relevant threads
     value_thread.start()
     thread_post.start()
     thread_co2.start()
