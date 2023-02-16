@@ -6,14 +6,59 @@ Project guide is available here: https://github.com/edstott/ES-CW1/blob/main/REA
 
 ## Final Idea
 
-Smart mask that can also be used as a wearable. It is good for doctors, they are our target customers, as well as people who live in very polluted areas, where air quality can vary a lot. 
+The final idea was to develop a smart mask that can also be used as a wearable. It is ideal for doctors who are our target customers, as well as people who live in very polluted areas, where air quality is extremely variable. 
 
-It keeps track of their calories by measuring steps, (heart rate?), while also monitoring the surrounding air quality. 
+The product keeps track of their calories by measuring steps, heart rate through a PPG sensor, and also monitors the surrounding air quality using VOC and CO2 sensors. For the development of the product, we spoke to various doctors and engineers as well as conducting much of our own market research to prototype a product that could truly be used in the widespread commercial sector. Please refer to our marketing website to see the latest information about the mask and our marketing research.            
 
 
 Marketing website: https://pmz7696.wixsite.com/opencare
 
+## Github Organization
 
+A total of 4 development branches were used to build the frontend of the website as well as program the hardware. The final folders OPENCAREMQTT and hardware_final contain the complete and finished code that our group used to demonstrate the project.     
+
+## Running the hardware 
+
+Please wire the 4 sensors according to documentation (with GPIO 23 and 24) used as the SCL and SDA pins for the CO2 sensor. Following this run python3 main.py in the hardware_final branch.   
+
+# Running the Server
+<b>To run server locally:</b><br>
+  python3 manage.py runserver<br><br>
+<b>To run server on specified port:</b><br>
+  python3 manage.py runserver 8000 <- port number<br><br>
+<b>To run server on local internet for raspberry communications:</b><br>
+  python3 manage.py runserver 0.0.0.0:8000 <- port number can be changed<br>
+  #Then check your assigned ip to acess it using ipconfig, etc...<br><br>
+
+## Contributors
+
+Our group had a primarily flat structure with each member focusing on specific section for development and deployment. This provides a very brief description of the roles and contributions for each of the members in this group.   
+
+Matthew Setiawan (Frontend), Omar Zeidan (Communications MQTT), James Ong (Hardware), Milan Paczai (Hardware) 
+
+# Project Management
+
+## Meeting Times
+
+* Mondays: 11:30 AM
+* Wednesdays: 10AM - 12PM
+* Friday: (time to confirm!)
+
+## Timeline
+
+* 23 Jan - Week 1: raspberry setup, idea finalised
+* 30 Jan - Week 2: website setup, MVP in progress
+* 6 Feb - Week 3: MVP Ready: Week 3 end 1 Feb (ie two weeks before deadline - confirm!), video produce
+* 13 Feb - Week 4: Deadline: 15 Feb 
+
+## Deliverables
+
+* GitHub code that integrates sensor with platform and uploads data to servers 
+* Website that markets the product
+* Video demonstrating the functioning of the product - script is available here: https://imperiallondon-my.sharepoint.com/:w:/g/personal/mzp20_ic_ac_uk/EfugM0uc02JAo0X8RFixDqABNL0SZZwlMIuWukn8jrV1zg?e=lh35id
+
+
+  
 ## Ideas
 
 * Smart Mailbox
@@ -51,37 +96,5 @@ Marketing website: https://pmz7696.wixsite.com/opencare
 * Raspberry PI
 
 
-# Project Management
-
-## Meeting Times
-
-* Mondays: (time to confirm!)
-* Wednesdays: 10am - 12pm
-* Friday: (time to confirm!)
-
-## Timeline
-
-* 23 Jan - Week 1: raspberry setup, idea finalised
-* 30 Jan - Week 2: website setup, MVP in progress
-* 6 Feb - Week 3: MVP Ready: Week 3 end 1 Feb (ie two weeks before deadline - confirm!), video produce
-* 13 Feb - Week 4: Deadline: 15 Feb 
-
-## Deliverables
-
-* GitHub code that integrates sensor with platform and uploads data to servers 
-* Website that markets the product
-* Video demonstrating the functioning of the product - script is available here: https://imperiallondon-my.sharepoint.com/:w:/g/personal/mzp20_ic_ac_uk/EfugM0uc02JAo0X8RFixDqABNL0SZZwlMIuWukn8jrV1zg?e=lh35id
-
-## Contributors
-Matthew Setiawan, Omar Zeidan, James Ong, Milan Paczai
-
-# Running the Server
-<b>To run server locally:</b><br>
-  python3 manage.py runserver<br><br>
-<b>To run server on specified port:</b><br>
-  python3 manage.py runserver 8000 <- port number<br><br>
-<b>To run server on local internet for raspberry communications:</b><br>
-  python3 manage.py runserver 0.0.0.0:8000 <- port number can be changed<br>
-  #Then check your assigned ip to acess it using ipconfig, etc...<br><br>
  
 
