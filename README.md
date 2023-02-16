@@ -19,16 +19,28 @@ A total of 4 development branches were used to build the frontend of the website
 
 ## Running the hardware 
 
-Please wire the 4 sensors according to documentation (with GPIO 23 and 24) used as the SCL and SDA pins for the CO2 sensor. Following this run python3 main.py in the hardware_final branch.   
+Please wire the 4 sensors according to documentation (with GPIO 23 and 24) used as the SCL and SDA pins for the CO2 sensor. Following this run 
+
+````shell
+python3 main.py 
+````
+in the hardware_final branch.   
 
 # Running the Server
 * Visit folder containing manage.py -> serverside_branch/OpenCareMQTT2/manage.py
 <b>To run server locally:</b><br>
+````shell
   python3 manage.py runserver<br><br>
+````
 <b>To run server on specified port:</b><br>
+````shell
   python3 manage.py runserver 8000 <- port number<br><br>
+````
 <b>To run server on local area network for raspberry communications:</b><br>
+````shell
   python3 manage.py runserver 0.0.0.0:8000 <- port number can be changed<br>
+````
+
   #Then check your assigned ip to acess it using ipconfig, etc...<br><br>
 
 ## Contributors
