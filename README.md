@@ -96,4 +96,4 @@ Frontend
   python3 manage.py runserver 0.0.0.0:8000 <- port number can be changed<br>
   #Then check your assigned ip to acess it using ipconfig, etc...<br><br>
  
-=======
+
