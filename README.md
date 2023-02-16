@@ -72,9 +72,6 @@ Marketing website: https://pmz7696.wixsite.com/opencare
 * Website that markets the product
 * Video demonstrating the functioning of the product - script is available here: https://imperiallondon-my.sharepoint.com/:w:/g/personal/mzp20_ic_ac_uk/EfugM0uc02JAo0X8RFixDqABNL0SZZwlMIuWukn8jrV1zg?e=lh35id
 
-## Aims
-
-
 ## Contributors
 Matthew Setiawan, Omar Zeidan, James Ong, Milan Paczai
 <h2>Running the Server</h2>
