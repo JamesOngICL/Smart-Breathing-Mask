@@ -17,6 +17,12 @@ import gyro_acc, co2_vals, heart
 import paho.mqtt.client as mqtt 
 
 
+'''
+
+This is a modified version of main.py which will be compatible for 2 boards. 
+
+'''
+
 bus = smbus2.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
 
 #Device_Address = 0x68   # MPU6050 device address

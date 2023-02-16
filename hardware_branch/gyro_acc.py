@@ -6,7 +6,11 @@ import time
 import json
 import time
 import random
-import threading_almost_fin as inh
+# import threading_almost_fin as inh
+
+import threading
+
+bus = smbus2.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
 
 
 class gyro_accelerometer_sensor():
@@ -27,8 +31,8 @@ class gyro_accelerometer_sensor():
             #initialize all four MPU6050 registers + addresses.
             for i in range(4):
                 addr_key, reg, data = init_dict["addr"], init_dict["reg"],init_dict["data"]
-                with inh.lock:
-                    inh.bus.write_byte_data(addr_key[0],reg[i],data[i])
+                with threading.Lock():
+                    bus.write_byte_data(addr_key[0],reg[i],data[i])
 
         except:
             #error initializing addresses, useful unit test.
@@ -60,13 +64,13 @@ class gyro_accelerometer_sensor():
 
             """
             #get the top address and do bitwise shifting
-            top = (inh.bus.read_byte_data(0x68, addr))<<8
+            top = (bus.read_byte_data(0x68, addr))<<8
 
             #pause to avoid race conditions
             time.sleep(0.1)
 
             #get bottom value
-            bot = inh.bus.read_byte_data(0x68, addr+1)
+            bot = bus.read_byte_data(0x68, addr+1)
 
             #get values.
             get_val = self.process_readings(first=top,second=bot,threshold=32678)

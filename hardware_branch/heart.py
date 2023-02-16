@@ -9,8 +9,9 @@ import time
 import math
 import RPi.GPIO as GPIO
 import smbus
+import threading
 
-import threading_almost_fin as th
+
 
 class heart_sensor():
     def __init__(self):
@@ -30,7 +31,7 @@ class heart_sensor():
 
         reg_data = self.bus.read_i2c_block_data(self.address, 0x00, 1)
 
-        with th.lock:
+        with threading.Lock():
             #Initialize all the relevant I2C bus addresses. 
             self.bus.write_i2c_block_data(self.address, 0x02, [0xc0])
             self.bus.write_i2c_block_data(self.address, 0x03, [0x00])
@@ -59,7 +60,7 @@ class heart_sensor():
         ir_led = None
 
         # read 1 byte from registers (values are discarded)
-        with th.lock:
+        with threading.Lock():
             reg_INTR1 = self.bus.read_i2c_block_data(self.address, 0x00, 1)
             reg_INTR2 = self.bus.read_i2c_block_data(self.address, 0x01, 1)
 

@@ -57,7 +57,6 @@ class post_to_server(threading.Thread):
         pass
 
 
-
 def thread_to_server(thread_name):
 
     '''
@@ -81,60 +80,83 @@ def thread_to_server(thread_name):
             #attempt to extract data from the queue.
             get_q_val = make_q.get(block=False)
 
-        except queue.Empty:            
+        except queue.Empty:
+            # print("continuing") 
             continue
 
         except:
-            time.sleep(0.05)
-
+            break
+    
         else:
-
-            client = mqtt.Client('raspberry_pi_test')
-            client.connect("146.169.253.62",port=1883)
-            
-            if 'Temperature' in get_q_val:
-                # print("preposting",get_q_val['Temperature'])
-                reading_data = {'Sensor:temperaturereading':str(round(get_q_val['Temperature'], 3)),'address':'MS3120001'}
-            elif 'Accelerometer' in get_q_val:
-                # print(get_q_val['Accelerometer'])
-                new_data = [(get_q_val['Accelerometer'][0]), (get_q_val['Accelerometer'][1]), (get_q_val['Accelerometer'][2])]
-                reading_data = {'Sensor:accelerometerreading': str(new_data),'address':'MS3120001'}
+            try: 
+                client = mqtt.Client('Temperature_Sensor')
+                client.connect("146.169.250.105",port=1883)
                 
-            elif 'h_rate' in get_q_val:
-                reading_data = {'Sensor:heartratereading':str(get_q_val['h_rate'][0]),'address':'MS3120001'}
+                if 'Temperature' in get_q_val:
+                    # print("preposting",get_q_val['Temperature'])
+                    reading_data = {'Sensor:temperaturereading':str(round(get_q_val['Temperature'], 3)),'address':'MS3120001'}
+                elif 'Accelerometer' in get_q_val:
+                    # print(get_q_val['Accelerometer'])
+                    new_data = [(get_q_val['Accelerometer'][0]), (get_q_val['Accelerometer'][1]), (get_q_val['Accelerometer'][2])]
+                    reading_data = {'Sensor:accelerometerreading': str(new_data),'address':'MS3120001'}
+                    
+                elif 'h_rate' in get_q_val:
+                    reading_data = {'Sensor:heartratereading':str(get_q_val['h_rate'][0]),'address':'MS3120001'}
 
-            elif 'co2_air_qual' in get_q_val:
-                new_data = [(get_q_val['co2_air_qual'][0]), (get_q_val['co2_air_qual'][1])]
-                reading_data = {'Sensor:co2reading':str(new_data),'address':'MS3120001'}
-            else:
+                elif 'co2_air_qual' in get_q_val:
+                    new_data = [(get_q_val['co2_air_qual'][0]), (get_q_val['co2_air_qual'][1])]
+                    reading_data = {'Sensor:co2reading':str(new_data),'address':'MS3120001'}
+                else:
+                    continue
+
+                print("GET READING DATA:",reading_data)
+                try:
+                    MSG_INFO = client.publish("sensors/omar/readings", encrypt(str(reading_data),getkey()))
+                    print("Currently Sending:",reading_data)
+                    mqtt.error_string(MSG_INFO.rc)
+
+                except Exception as e:
+                    print("Had an exception on MQTT",e)
+                    time.sleep(0.05)
+
+                # print("Message Published: ", MSG_INFO.is_published())
+            except Exception as e:
+                print("Had an exception on MQTT")
+                # time.sleep(0.15)
                 continue
+            
+            except KeyboardInterrupt:
+                break
+         
 
-            MSG_INFO = client.publish("sensors/omar/readings", encrypt(str(reading_data),key))
-            print("Currently Sending:",reading_data)
-            mqtt.error_string(MSG_INFO.rc)
-            time.sleep(0.01)
-            # print("Message Published: ", MSG_INFO.is_published())
-
+        
 
     return
 
 def getkey():
     '''
-    Function that will generate a public key necessary for posting to MQTT.
+    
+    Generates a rsa public key needed for encryption purposes
+
+    Output:
+    public_key -> type(rsa.PublicKey)
+
     '''
     public_key = rsa.PublicKey(17822536325291103101323819498187309223540366914795284790480275832907387155167793075777561150522889142593001669196266128814411559496746832319118549807122213726549864914547111915612810151458421841885576703978191424830064979840625261982526983948534265579315189645712708057829444744526097651478257973249834256433525747544157305555064689911278584472322809386995238704397789909958860784202773540915843232935732240372781175094908655965143500697948600899964661078620371137797175431929993230441845012688184755850715508366128027618816784376158765529688868977572400965001046656964586523083679277864216337830024186581266532501199, 65537)
+
     return public_key
 
 def encrypt(message,key):
-    """"
-    Protocol to encrypt the relevant message information and the information can be sent to the server. 
-    """
+    '''
+
+    Runs a binary hexify operator to convert and encrypt data messages. 
+    This is by default on the messages that are and will be encrypted by rsa. 
+
+    '''
     return binascii.hexlify(rsa.encrypt(message.encode(),key)).decode()
+    
 
-#gets the public postable key. 
 key = getkey()
-
-
 
 def process_vals(mode):
     '''
@@ -163,14 +185,7 @@ def process_vals(mode):
         return Ax,Ay,Az
 
 
-def get_temp_acc(make_q,lock):
-    
-    '''
-    
-    Runs a function to get and extract the raw temperature and acceleration values and place 
-    them within a queue data structure. 
-    
-    '''
+def reading_to_queue(make_q,lock):
 
     try:
         print("Posting values")
@@ -213,20 +228,15 @@ def get_temp_acc(make_q,lock):
 
 
 def co2_to_queue(addr,make_q):
-    '''
-    
-    Calls the CO2 class in a thread initalized later and will send data to the shared queue resource.  
-    
-    '''
 
-    co2_meas = co2_vals.measure_vocs()
+    co2_meas = co2_vals.measure_co2voc(addr)
 
     while True:
 
         try:
             
-            temp_val = co2_meas.read_co2_vals(addr)
-            conv_value = co2_meas.convert_co2_vals(temp_val)
+            temp_val = co2_meas.read_vals()
+            conv_value = co2_meas.convert_vals(temp_val)
 
             postable_dict = {'co2_air_qual':conv_value}
             make_q.put(postable_dict)
@@ -261,7 +271,7 @@ def read_heart_rate(make_q):
             #push this to the global queue. 
             make_q.put(postable_dict)
 
-            time.sleep(0.03)
+            time.sleep(0.035)
         
         except KeyboardInterrupt:
             break
@@ -272,21 +282,15 @@ def read_heart_rate(make_q):
             time.sleep(new_rand)
 
 def run_threads():
-    '''
-    
-    Calling this function will result in all 4 threads being triggered and running on the main thread. 
-    
-    ''' 
-    
-    #Name and intialize the threads
-    value_thread = threading.Thread(target=get_temp_acc,args=(make_q,lock),daemon=True)
+    #Run the Threads. 
+    value_thread = threading.Thread(target=reading_to_queue,args=(make_q,lock),daemon=True)
     thread_co2 = threading.Thread(target=co2_to_queue,args=(0x5A,make_q),daemon=True)
     thread_heart_rate = threading.Thread(target=read_heart_rate, args=(make_q,),daemon=True)
     thread_post = post_to_server("Server_Thread")
     
     print("---------Threads Initialized------------")   
 
-    #Runs the relevant threads
+
     value_thread.start()
     thread_post.start()
     thread_co2.start()
@@ -297,4 +301,3 @@ def run_threads():
 if __name__=="__main__":
     print("----Running the website----")
     run_threads()
-
