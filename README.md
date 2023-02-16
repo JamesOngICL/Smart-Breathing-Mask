@@ -68,12 +68,7 @@ Matthew Setiawan (Frontend), Omar Zeidan (Communications MQTT), James Ong (Hardw
 
 ## Other Electronic Components
 
-* push button
-* servomotor
-* slide switch
-* vibration motor
-* LED
-* Raspberry PI
+* Raspberry Pi Zero
 
 
  
