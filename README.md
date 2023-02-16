@@ -1,6 +1,6 @@
-# Project by the Smart Team
+# Project by Smart Team
 
-It's a project for the 3rd Year EE Embedded Systems Module.
+This is a project for the 3rd Year EE Embedded Systems Module.
 
 Project guide is available here: https://github.com/edstott/ES-CW1/blob/main/README.md
 
