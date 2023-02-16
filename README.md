@@ -22,6 +22,7 @@ A total of 4 development branches were used to build the frontend of the website
 Please wire the 4 sensors according to documentation (with GPIO 23 and 24) used as the SCL and SDA pins for the CO2 sensor. Following this run python3 main.py in the hardware_final branch.   
 
 # Running the Server
+* Visit folder containing manage.py -> serverside_branch/OpenCareMQTT2/manage.py
 <b>To run server locally:</b><br>
   python3 manage.py runserver<br><br>
 <b>To run server on specified port:</b><br>
@@ -57,33 +58,12 @@ Matthew Setiawan (Frontend), Omar Zeidan (Communications MQTT), James Ong (Hardw
 * Website that markets the product
 * Video demonstrating the functioning of the product - script is available here: https://imperiallondon-my.sharepoint.com/:w:/g/personal/mzp20_ic_ac_uk/EfugM0uc02JAo0X8RFixDqABNL0SZZwlMIuWukn8jrV1zg?e=lh35id
 
-
-  
-## Ideas
-
-* Smart Mailbox
-* Smart Window
-* Smart Gate
-* Smart Nailpolish 
-* Smart Doorflap
-* Smart Device that 
-* Smart Lie Detector
-
 ## Sensors Available
 
 * accelerometer
-* time of flight distance
-* thermal pile (non contact temperature sensor)
-* load cell (for sensor)
-* air quality sensor
-* adc for analog sensors
-* atmospheric pressure sensor
-* magnetometer (compass)
-* spectual light sensor
-* ultrasonic range finder
-* flex sensor
-* air temperature and humidity sensor
-* air velocity sensor
+* ppd sensor
+* co2 sensor
+* temperature and humidity sensor
 
 
 ## Other Electronic Components
