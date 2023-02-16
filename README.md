@@ -72,16 +72,6 @@ Marketing website: https://pmz7696.wixsite.com/opencare
 * Website that markets the product
 * Video demonstrating the functioning of the product - script is available here: https://imperiallondon-my.sharepoint.com/:w:/g/personal/mzp20_ic_ac_uk/EfugM0uc02JAo0X8RFixDqABNL0SZZwlMIuWukn8jrV1zg?e=lh35id
 
-
-## Tasks
-
-* Multithreading - in progress - James
-* Setting up air quality sensor - Milan
-* Setting up marketing website - Milan
-* Video script ready by Friday evening - Milan
-* Reorganising code in an OOP way - Milan
-* Setting up LED functionality - def led(state, color) - Milan
-
 ## Aims
 
 
