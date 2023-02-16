@@ -27,7 +27,7 @@ Please wire the 4 sensors according to documentation (with GPIO 23 and 24) used 
   python3 manage.py runserver<br><br>
 <b>To run server on specified port:</b><br>
   python3 manage.py runserver 8000 <- port number<br><br>
-<b>To run server on local internet for raspberry communications:</b><br>
+<b>To run server on local area network for raspberry communications:</b><br>
   python3 manage.py runserver 0.0.0.0:8000 <- port number can be changed<br>
   #Then check your assigned ip to acess it using ipconfig, etc...<br><br>
 
