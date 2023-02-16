@@ -86,7 +86,7 @@ Marketing website: https://pmz7696.wixsite.com/opencare
 
 
 ## Contributors
-Frontend
+Matthew Setiawan, Omar Zeidan, James Ong, Milan Paczai
 <h2>Running the Server</h2>
 <b>To run server locally:</b><br>
   python3 manage.py runserver<br><br>
