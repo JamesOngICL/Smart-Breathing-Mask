@@ -58,7 +58,7 @@ Matthew Setiawan (Frontend), Omar Zeidan (Communications MQTT), James Ong (Hardw
 
 * Mondays: 11:30 AM
 * Wednesdays: 10AM - 12PM
-* Friday: (time to confirm!)
+* Friday: 10:00AM 
 
 ## Timeline
 
@@ -73,17 +73,17 @@ Matthew Setiawan (Frontend), Omar Zeidan (Communications MQTT), James Ong (Hardw
 * Website that markets the product
 * Video demonstrating the functioning of the product - script is available here: https://imperiallondon-my.sharepoint.com/:w:/g/personal/mzp20_ic_ac_uk/EfugM0uc02JAo0X8RFixDqABNL0SZZwlMIuWukn8jrV1zg?e=lh35id
 
-## Sensors Available
+## Sensors Used
 
 * accelerometer
-* ppd sensor
+* ppg sensor
 * co2 sensor
 * temperature and humidity sensor
 
 
 ## Other Electronic Components
-
 * Raspberry Pi Zero
+* UART cable
 
 
  
