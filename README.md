@@ -29,7 +29,7 @@ python3 main.py
 ````
 
 # Running the Server
-* Visit folder containing manage.py -> serverside_branch/OpenCareMQTT2<br>
+Visit folder containing manage.py -> serverside_branch/OpenCareMQTT2<br><br>
 <b>To run server locally:</b><br>
 ````shell
   python3 manage.py runserver
