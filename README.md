@@ -1,21 +1,18 @@
 # Project by Smart Team
 
-This is a project for the 3rd Year EE Embedded Systems Module.
-
-Project guide is available here: https://github.com/edstott/ES-CW1/blob/main/README.md
-
-## Final Idea
-
-The final idea was to develop a smart mask that can also be used as a wearable. It is ideal for doctors who are our target customers, as well as people who live in very polluted areas, where air quality is extremely variable. 
+This is a project for the 3rd Year EE Embedded Systems Module.The final idea was to develop a smart mask that can also be used as a wearable. It is ideal for doctors who are our target customers, as well as people who live in very polluted areas, where air quality is extremely variable. 
 
 The product keeps track of their calories by measuring steps, heart rate through a PPG sensor, and also monitors the surrounding air quality using VOC and CO2 sensors. For the development of the product, we spoke to various doctors and engineers as well as conducting much of our own market research to prototype a product that could truly be used in the widespread commercial sector. Please refer to our marketing website to see the latest information about the mask and our marketing research.            
 
 
+Project guide is available here: https://github.com/edstott/ES-CW1/blob/main/README.md
+
 Marketing website: https://pmz7696.wixsite.com/opencare
+
 
 ## Github Organization
 
-A total of 4 development branches were used to build the frontend of the website as well as program the hardware. The final folders serverside and hardware_branch contain the complete and finished code that our group used to demonstrate the project.     
+A total of 4 development branches were used to build the frontend of the website as well as program the hardware. The final folders serverside and hardware_branch contain the complete and finished code that our group used to demonstrate the project. The presentation which we used in the demonstration is also uploaded here.     
 
 ## Running the hardware 
 
