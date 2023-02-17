@@ -36,7 +36,7 @@ python3 main.py
 ````
 <b>To run server on specified port:</b><br>
 ````shell
-  python3 manage.py runserver 8000 <- port number<br><br>
+  python3 manage.py runserver 8000 #port number
 ````
 <b>To run server on local area network for raspberry communications:</b><br>
 ````shell
