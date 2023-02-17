@@ -15,11 +15,11 @@ Marketing website: https://pmz7696.wixsite.com/opencare
 
 ## Github Organization
 
-A total of 4 development branches were used to build the frontend of the website as well as program the hardware. The final folders OPENCAREMQTT and hardware_final contain the complete and finished code that our group used to demonstrate the project.     
+A total of 4 development branches were used to build the frontend of the website as well as program the hardware. The final folders serverside and hardware_branch contain the complete and finished code that our group used to demonstrate the project.     
 
 ## Running the hardware 
 
-Please wire the 4 sensors according to documentation (with GPIO 23 and 24) used as the SCL and SDA pins for the CO2 sensor. Following this run this in the directory hardware_final.
+Please wire the 4 sensors according to documentation (with GPIO 23 and 24) used as the SCL and SDA pins for the CO2 sensor. Following this run these commands taken from the directory hardware_branch.
 ````shell
 pip3 install requirements.txt
 ````
