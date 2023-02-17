@@ -90,7 +90,7 @@ def thread_to_server(thread_name):
         else:
             try: 
                 client = mqtt.Client('Temperature_Sensor')
-                client.connect("146.169.250.105",port=1883)
+                client.connect("146.169.253.234",port=1883)
                 
                 if 'Temperature' in get_q_val:
                     # print("preposting",get_q_val['Temperature'])
@@ -186,6 +186,15 @@ def process_vals(mode):
 
 
 def reading_to_queue(make_q,lock):
+    """
+    
+    Publishes the temperature and accelerometer readings to a queue. This uses CSMA inspired timeouts for I2c access and thread synchronization
+
+    Inputs:
+    Queue(make_q), lock(threading.lock())
+
+
+    """
 
     try:
         print("Posting values")
@@ -228,6 +237,14 @@ def reading_to_queue(make_q,lock):
 
 
 def co2_to_queue(addr,make_q):
+    '''
+
+    Takes the CO2 readings from the software I2c GPIO bus and publishes the read data into a queue.
+
+    Inputs:
+    type(hex) -> addr, type(queue) make_q
+    
+    '''
 
     co2_meas = co2_vals.measure_co2voc(addr)
 
@@ -256,7 +273,10 @@ def co2_to_queue(addr,make_q):
 def read_heart_rate(make_q):
     '''
 
-    Function to read the CO2 sensors including initializations 
+    Function to read the heart rate sensors including initializations and publish data to queue. 
+
+    Inputs:
+    type(queue) -> make_q
 
     '''
 
@@ -282,7 +302,14 @@ def read_heart_rate(make_q):
             time.sleep(new_rand)
 
 def run_threads():
-    #Run the Threads. 
+    '''
+    
+    Function to run and initialize all threads triggered called directly from if __name__=="__main__":
+
+    4 threads are present inlcuding co2, heart rate, server posting and temperature accelerometer. 
+
+    '''
+    #Initialize threads and arguments. 
     value_thread = threading.Thread(target=reading_to_queue,args=(make_q,lock),daemon=True)
     thread_co2 = threading.Thread(target=co2_to_queue,args=(0x5A,make_q),daemon=True)
     thread_heart_rate = threading.Thread(target=read_heart_rate, args=(make_q,),daemon=True)
@@ -290,7 +317,7 @@ def run_threads():
     
     print("---------Threads Initialized------------")   
 
-
+    #start the threads
     value_thread.start()
     thread_post.start()
     thread_co2.start()
@@ -299,5 +326,10 @@ def run_threads():
     pass
 
 if __name__=="__main__":
+    ''''
+    
+    Generic if__name__=="__main__": that just runs all the threads
+
+    '''
     print("----Running the website----")
     run_threads()

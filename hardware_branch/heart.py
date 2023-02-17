@@ -15,6 +15,11 @@ import threading
 
 class heart_sensor():
     def __init__(self):
+        '''
+        
+        Function that initializes all the relevant heart rate sensor values
+
+        '''
 
         print("Initialized Heart Rate Sensor")
         self.address = 0x57 #address
@@ -49,12 +54,29 @@ class heart_sensor():
             self.bus.write_i2c_block_data(self.address, 0x10, [0x7f])
 
     def set_config(self, reg, value):
+        '''                
+        Function that gets heart rate configurese writing to relevant i2c address and value sensor values
+
+        Inputs:
+        type(class)-> self, type(hex)-> reg, type(float)->value
+
+
+        '''
+
         #write the i2c_block data needed for heart rate measurements. 
         self.bus.write_i2c_block_data(self.address, reg, value)
 
     def read_fifo(self):
         """
-        This function will read the data register.
+
+        This function will read the data register and return heart rate and oxygen saturation parameters. 
+
+        Inputs:
+        type(class)-> self. 
+
+        Output:
+        type(float)->red_led, type(float)->ir_led
+
         """
         red_led = None
         ir_led = None

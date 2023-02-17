@@ -23,6 +23,9 @@ class gyro_accelerometer_sensor():
 
         Initializes the accelerometer in python, possibly if the pins aren't in place this will break.
 
+        Inputs:
+        type(class) -> self. 
+
         """
         init_dict = {"addr":[0x68],
         "reg":[0x19,0x6B,0x1A,0x38],"data":[7,1,0,1]}
@@ -62,6 +65,12 @@ class gyro_accelerometer_sensor():
 
             Extracts the relevant data from the accelerometer and gyroscope sensor.
 
+            Inputs:
+            type(class)->self, type(hex)->addr
+
+            Output:
+            get_val -> represented as bytes
+
             """
             #get the top address and do bitwise shifting
             top = (bus.read_byte_data(0x68, addr))<<8
@@ -81,6 +90,12 @@ class gyro_accelerometer_sensor():
         """
 
         Function to process the input accelerometer values present from the input address
+
+        Inputs:
+        type(self), type(hex)->inp_addr
+
+        Output:
+        type(float), type(float), type(float) -> representing the g value accelerometer value. 
 
         """
         x_inp = self.read_raw_data(inp_addr[0])

@@ -40,6 +40,12 @@ class temp_hum_sensor():
         """
 
         Converts the temperature value to relevant float format
+        
+        Inputs:
+        type(class) self with all member attributes
+
+        Output:
+        convert_temp type(float) -> representing temperature converted to float
 
         """
         #temperature conv func
@@ -54,6 +60,12 @@ class temp_hum_sensor():
 
         Reads the humidity byte value and converts to float.
 
+        Inputs:
+        self, value
+
+        Output:
+        conv_humidity type(float) -> representing humidity converted to float
+
         """
 
         #humidity mapping function
@@ -67,6 +79,12 @@ class temp_hum_sensor():
         """
 
         Has an effect of reading temperature values from the sensor
+
+        Inputs:
+        type(class)-> self, type(str) -> mode corresponding to whether reading temperature or humidity
+
+        Output:
+        value -> type(float) representing converted temperature or humidity value. 
 
         """
 
